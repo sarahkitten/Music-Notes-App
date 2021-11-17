@@ -18,6 +18,9 @@
         android:id="@+id/undoId"
         android:title="@string/undo" />
     <item
+        android:id="@+id/backId"
+        android:title="@string/back" />
+    <item
         android:id="@+id/lineWidth"
         android:icon="@drawable/stroke_width"
         android:title="@string/lineWidth"
