@@ -94,6 +94,10 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
                 pikassoView.saveToInternalStorage();
                 break;
 
+            case R.id.undoId:  // invoke undo
+                pikassoView.undo();
+                break;
+
             case R.id.backId:  // return to menu
                 navController.navigate(R.id.action_drawingFragment_to_fileListFragment);
                 break;
