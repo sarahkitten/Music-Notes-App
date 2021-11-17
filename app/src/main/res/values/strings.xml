@@ -4,6 +4,7 @@
     <string name="Save">Save</string>
     <string name="lineWidth">Line Width</string>
     <string name="erase">Erase</string>
+    <string name="undo">Undo</string>
     <string name="clear">Clear</string>
     <string name="set_width">Set Width</string>
     <string name="label_alpha">Alpha</string>

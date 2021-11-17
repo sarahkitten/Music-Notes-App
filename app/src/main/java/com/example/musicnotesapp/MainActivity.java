@@ -70,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
                 pikassoView.saveToInternalStorage();
                 break;
 
+            case R.id.undoId:  // invoke undo
+                pikassoView.undo();
+                break;
+
             case R.id.colorid:  // invoke color select
                 showColorDialog();
                 break;

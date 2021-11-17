@@ -34,12 +34,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Stack;
 
 public class PikassoView extends View {
 
     public static final float TOUCH_TOLERANCE = 10;
     private Bitmap bitmap;  // where we save the pixels
     private Canvas bitmapCanvas;  // draws the bitmap
+    private Stack<Path> pathHistory = new Stack<Path>();
+    private Stack<Paint> lineHistory = new Stack<Paint>();
     private Paint paintScreen;
     private Paint paintLine;
     private HashMap<Integer, Path> pathMap;
@@ -162,12 +165,16 @@ public class PikassoView extends View {
     public void clear() {
         pathMap.clear();  // removes all of the paths
         previousPointMap.clear();  // clear map of previous points
+        pathHistory.clear();
+        lineHistory.clear();
         bitmap.eraseColor(Color.WHITE);  // erase bitmap
         invalidate(); // refresh the screen
     }
 
     private void touchEnded(int pointerId) {
         Path path = pathMap.get(pointerId);  // get the corresponding path
+        pathHistory.push(new Path(path));
+        lineHistory.push(new Paint(paintLine));
         bitmapCanvas.drawPath(path, paintLine);  // draw to bitmapCanvas
         path.reset();  // reset path
     }
@@ -244,6 +251,20 @@ public class PikassoView extends View {
 //            img.setImageBitmap(b);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void undo() {
+        if (pathHistory.size() > 0)
+        {
+            pathHistory.pop(); // Remove the last path from the history
+            bitmap.eraseColor(Color.WHITE);
+
+            // Draw the paths and paint lines which are still in the history
+            for (int i = 0; i < pathHistory.size(); i++)
+            {
+                bitmapCanvas.drawPath(pathHistory.get(i), lineHistory.get(i));
+            }
         }
     }
 }
