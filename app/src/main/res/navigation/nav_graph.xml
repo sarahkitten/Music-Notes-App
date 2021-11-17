@@ -30,5 +30,24 @@
             app:popExitAnim="@anim/slide_out"
             android:id="@+id/action_fileListFragment_to_recordFragment"
             app:destination="@id/recordFragment" />
+        <action
+            android:id="@+id/action_fileListFragment_to_drawingFragment"
+            app:destination="@id/drawingFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/drawingFragment"
+        android:name="com.example.musicnotesapp.DrawingFragment"
+        android:label="DrawingFragment" >
+        <action
+            android:id="@+id/action_drawingFragment_to_fileListFragment"
+            app:destination="@id/fileListFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
 </navigation>
