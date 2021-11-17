@@ -24,14 +24,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Note"
-        app:layout_anchor="@+id/Record"
+        app:layout_anchor="@id/Record"
         app:layout_anchorGravity="end|bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="900"
+            app:layout_constraintHorizontal_bias="0.726"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="900" />
+        app:layout_constraintVertical_bias="0.8" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/file_list_view"

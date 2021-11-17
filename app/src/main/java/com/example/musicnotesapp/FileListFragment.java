@@ -1,6 +1,9 @@
 package com.example.musicnotesapp;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +26,6 @@ import java.io.File;
  * A simple {@link Fragment} subclass.
  */
 public class FileListFragment extends Fragment implements View.OnClickListener {
-
-    //private NavController navController;
 
     private NavController navController;
     private Button NoteBtn;
@@ -87,13 +88,19 @@ public class FileListFragment extends Fragment implements View.OnClickListener {
         RecordBtn = view.findViewById(R.id.Record);
 
         RecordBtn.setOnClickListener(this);
+        NoteBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.Record:
+                Log.d(TAG, "onClick: Record button clicked");
                 navController.navigate(R.id.action_fileListFragment_to_recordFragment);
+                break;
+            case R.id.Note:
+                Log.d(TAG, "onClick: Note button clicked");
+                navController.navigate(R.id.action_fileListFragment_to_drawingFragment);
                 break;
         }
     }
