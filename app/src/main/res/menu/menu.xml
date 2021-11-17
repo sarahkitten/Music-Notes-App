@@ -15,6 +15,9 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="@string/Save" />
     <item
+        android:id="@+id/undoId"
+        android:title="@string/undo" />
+    <item
         android:id="@+id/backId"
         android:title="@string/back" />
     <item
