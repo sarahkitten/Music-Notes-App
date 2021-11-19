@@ -3,9 +3,12 @@
 // View for drawing on the screen
 
 package view;
+import static android.content.ContentValues.TAG;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
@@ -24,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.musicnotesapp.R;
 
@@ -40,6 +46,7 @@ public class PikassoView extends View {
 
     public static final float TOUCH_TOLERANCE = 10;
     private Bitmap bitmap;  // where we save the pixels
+    private Bitmap bitmapSaveState;  // save state to restore for drag and drop
     private Canvas bitmapCanvas;  // draws the bitmap
     private Stack<Path> pathHistory = new Stack<Path>();
     private Stack<Paint> lineHistory = new Stack<Paint>();
@@ -47,6 +54,11 @@ public class PikassoView extends View {
     private Paint paintLine;
     private HashMap<Integer, Path> pathMap;
     private HashMap<Integer, Point> previousPointMap;
+    private boolean isDrawMode = false;  // indicates drawing lines rather than drag/dropping notes
+    // ^ set this to true for regular drawing
+
+    Drawable draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.half_note, null);  // image to drag/drop (currently hard-coded)
+
 
     public PikassoView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -111,8 +123,55 @@ public class PikassoView extends View {
         return true;
     }
 
-    private void touchMoved(MotionEvent event) {
+    private void touchStarted(float x, float y, int pointerId) {
+        if (isDrawMode) {
+            drawingTouchStarted(x, y, pointerId);
+        } else {
+            // else, drag and drop
+            imgDragTouchStarted(x, y, pointerId);
+        }
+    }
 
+    private void touchMoved(MotionEvent event) {
+        if (isDrawMode) {
+            drawingTouchMoved(event);
+        } else {
+            // else, drag and drop
+            imgDragTouchMoved(event);
+        }
+    }
+
+    private void touchEnded(int pointerId) {
+        if (isDrawMode) {
+            drawingTouchEnded(pointerId);
+        } else {
+            // else, drag and drop
+            imgDragTouchEnded(pointerId);
+        }
+    }
+
+    private void drawingTouchStarted(float x, float y, int pointerId) {
+        Path path;  // store the path for a given touch
+        Point point;  // store the last point in path
+
+        if (pathMap.containsKey(pointerId)) {  // path map is not empty, continue touch
+            path = pathMap.get(pointerId);  // get path
+            point = previousPointMap.get(pointerId);  // get point
+        } else {  // path map is empty, this is a new touch
+            path = new Path();  // create path
+            pathMap.put(pointerId, path);  // create path map
+            point = new Point();  // create point
+            previousPointMap.put(pointerId, point);  // put point in previous point map
+        }
+
+        // move to the coordinates of the touch
+        path.moveTo(x, y);
+        // assign point coordinates
+        point.x = (int) x;
+        point.y = (int) y;
+    }
+
+    private void drawingTouchMoved(MotionEvent event) {
         for (int i = 0; i < event.getPointerCount(); i++) {  // loop through pointers
 
             int pointerId = event.getPointerId(i);  // get pointer id
@@ -146,6 +205,41 @@ public class PikassoView extends View {
         }
     }
 
+    private void drawingTouchEnded(int pointerId) {
+        Path path = pathMap.get(pointerId);  // get the corresponding path
+        pathHistory.push(new Path(path));
+        lineHistory.push(new Paint(paintLine));
+        bitmapCanvas.drawPath(path, paintLine);  // draw to bitmapCanvas
+        path.reset();  // reset path
+    }
+
+    private void imgDragTouchStarted(float x, float y, int pointerId) {
+        // save bitmap state and draw draggable_img at x, y
+        bitmapSaveState = bitmap.copy(Bitmap.Config.ARGB_8888, true);  // save bitmap state
+        draggable_img.setBounds((int) x, (int) y, (int) (x + draggable_img.getIntrinsicWidth()/20),
+                (int) (y + draggable_img.getIntrinsicHeight()/20));  // set img bounds (size/position)
+        draggable_img.draw(bitmapCanvas);  // draw image
+    }
+
+    private void imgDragTouchMoved(MotionEvent event) {
+        // get rid of previous drawn image, draw in new pointer position
+        bitmapCanvas.drawBitmap(bitmapSaveState, 0, 0, null);  // restore bitmap save state
+        for (int i = 0; i < event.getPointerCount(); i++) {  // loop through pointers
+            int pointerId = event.getPointerId(i);  // get pointer id
+            int pointerIndex = event.findPointerIndex(pointerId);  // get pointer index
+            // get new coordinates
+            float x = event.getX(pointerIndex);
+            float y = event.getY(pointerIndex);
+            draggable_img.setBounds((int) x, (int) y, (int) (x + draggable_img.getIntrinsicWidth() / 20),
+                    (int) (y + draggable_img.getIntrinsicHeight() / 20));  // set img bounds (size/position)
+            draggable_img.draw(bitmapCanvas);  // draw image
+        }
+    }
+
+    private void imgDragTouchEnded(int pointerId) {
+        // implement? might not need anything
+    }
+
     public void setDrawingColor(int color) {
         paintLine.setColor(color);
     }
@@ -169,35 +263,6 @@ public class PikassoView extends View {
         lineHistory.clear();
         bitmap.eraseColor(Color.WHITE);  // erase bitmap
         invalidate(); // refresh the screen
-    }
-
-    private void touchEnded(int pointerId) {
-        Path path = pathMap.get(pointerId);  // get the corresponding path
-        pathHistory.push(new Path(path));
-        lineHistory.push(new Paint(paintLine));
-        bitmapCanvas.drawPath(path, paintLine);  // draw to bitmapCanvas
-        path.reset();  // reset path
-    }
-
-    private void touchStarted(float x, float y, int pointerId) {
-        Path path;  // store the path for a given touch
-        Point point;  // store the last point in path
-
-        if (pathMap.containsKey(pointerId)) {  // path map is not empty, continue touch
-            path = pathMap.get(pointerId);  // get path
-            point = previousPointMap.get(pointerId);  // get point
-        } else {  // path map is empty, this is a new touch
-            path = new Path();  // create path
-            pathMap.put(pointerId, path);  // create path map
-            point = new Point();  // create point
-            previousPointMap.put(pointerId, point);  // put point in previous point map
-        }
-
-        // move to the coordinates of the touch
-        path.moveTo(x, y);
-        // assign point coordinates
-        point.x = (int) x;
-        point.y = (int) y;
     }
 
     public void saveToInternalStorage() {
