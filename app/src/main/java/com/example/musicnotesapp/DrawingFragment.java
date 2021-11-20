@@ -112,6 +112,14 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
 
             case R.id.eraseId:  // invoke erase
                 break;
+
+            case R.id.randomizeId:  // temporary: randomize note type for drag and drop
+                pikassoView.randomizeDraggable_img();
+                break;
+
+            case R.id.toggleDrawingId:  // temporary: toggle between drawing and drag/drop
+                pikassoView.toggleDrawing();
+                break;
         }
 
         return super.onOptionsItemSelected(item);

@@ -40,6 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Stack;
 
 public class PikassoView extends View {
@@ -63,6 +64,13 @@ public class PikassoView extends View {
     public PikassoView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
+    }
+
+    public enum MusicItem {
+        QUARTER_NOTE,
+        HALF_NOTE,
+        WHOLE_NOTE,
+        STAFF
     }
 
     void init() {
@@ -254,6 +262,35 @@ public class PikassoView extends View {
 
     public int getLineWidth() {
         return (int) paintLine.getStrokeWidth();
+    }
+
+    public void setDraggable_img(MusicItem item) {
+        // set the draggable image to a drawable in the res folder
+        switch (item) {
+            case HALF_NOTE:
+                draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.half_note, null);
+                break;
+            case QUARTER_NOTE:
+                draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.quarter_note, null);
+                break;
+            case WHOLE_NOTE:
+                draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.whole_note, null);
+                break;
+            case STAFF:
+                draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.staff, null);
+                break;
+        }
+    }
+
+    public void randomizeDraggable_img() {
+        // temp: switch to a random one of the draggable images
+        int pick = new Random().nextInt(MusicItem.values().length);
+        setDraggable_img(MusicItem.values()[pick]);
+    }
+
+    public void toggleDrawing() {
+        // temp: toggle between drawing and drag/drop
+        isDrawMode = !isDrawMode;
     }
 
     public void clear() {

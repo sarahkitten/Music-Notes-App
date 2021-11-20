@@ -18,6 +18,12 @@
         android:id="@+id/undoId"
         android:title="@string/undo" />
     <item
+        android:id="@+id/randomizeId"
+        android:title="@string/randomize" />
+    <item
+        android:id="@+id/toggleDrawingId"
+        android:title="@string/toggleDrawing" />
+    <item
         android:id="@+id/backId"
         android:title="@string/back" />
     <item
