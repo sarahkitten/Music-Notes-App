@@ -3,12 +3,9 @@
 // View for drawing on the screen
 
 package view;
-import static android.content.ContentValues.TAG;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -17,18 +14,14 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.musicnotesapp.R;
@@ -38,7 +31,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Stack;
@@ -58,7 +50,9 @@ public class PikassoView extends View {
     private boolean isDrawMode = false;  // indicates drawing lines rather than drag/dropping notes
     // ^ set this to true for regular drawing
 
-    Drawable draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.half_note, null);  // image to drag/drop (currently hard-coded)
+    Drawable draggable_img;  // image to drag/drop
+    private float drag_img_width;  // x dimension of draggable img
+    private float drag_img_height;  // y dimension of draggable img
 
 
     public PikassoView(Context context, @Nullable AttributeSet attrs) {
@@ -85,6 +79,8 @@ public class PikassoView extends View {
 
         pathMap = new HashMap<>();  // map of paths
         previousPointMap = new HashMap<>();
+
+        setDraggable_img(MusicItem.QUARTER_NOTE);
     }
 
     @Override
@@ -224,13 +220,11 @@ public class PikassoView extends View {
     private void imgDragTouchStarted(float x, float y, int pointerId) {
         // save bitmap state and draw draggable_img at x, y
         bitmapSaveState = bitmap.copy(Bitmap.Config.ARGB_8888, true);  // save bitmap state
-        draggable_img.setBounds((int) x, (int) y, (int) (x + draggable_img.getIntrinsicWidth()/20),
-                (int) (y + draggable_img.getIntrinsicHeight()/20));  // set img bounds (size/position)
-        draggable_img.draw(bitmapCanvas);  // draw image
+        drawDraggable_img(x, y);  // draw img
     }
 
     private void imgDragTouchMoved(MotionEvent event) {
-        // get rid of previous drawn image, draw in new pointer position
+        // get rid of previous drawn image, draw image at new pointer position
         bitmapCanvas.drawBitmap(bitmapSaveState, 0, 0, null);  // restore bitmap save state
         for (int i = 0; i < event.getPointerCount(); i++) {  // loop through pointers
             int pointerId = event.getPointerId(i);  // get pointer id
@@ -238,14 +232,22 @@ public class PikassoView extends View {
             // get new coordinates
             float x = event.getX(pointerIndex);
             float y = event.getY(pointerIndex);
-            draggable_img.setBounds((int) x, (int) y, (int) (x + draggable_img.getIntrinsicWidth() / 20),
-                    (int) (y + draggable_img.getIntrinsicHeight() / 20));  // set img bounds (size/position)
-            draggable_img.draw(bitmapCanvas);  // draw image
+            drawDraggable_img(x, y);  // draw img
         }
     }
 
     private void imgDragTouchEnded(int pointerId) {
-        // implement? might not need anything
+        // implement? might need something here for undo
+    }
+
+    private void drawDraggable_img(float x, float y) {
+        // draw current draggable image centered on coords x, y
+        draggable_img.setBounds(  // set img bounds (size/position)
+                (int) (x - drag_img_width /2), // left
+                (int) (y - drag_img_height /2), // top
+                (int) (x + drag_img_width /2),  // right
+                (int) (y + drag_img_height /2));  // bottom
+        draggable_img.draw(bitmapCanvas);  // draw image
     }
 
     public void setDrawingColor(int color) {
@@ -266,20 +268,30 @@ public class PikassoView extends View {
 
     public void setDraggable_img(MusicItem item) {
         // set the draggable image to a drawable in the res folder
+        float size_multiplier_x = 1f;
+        float size_multiplier_y = 1f;
         switch (item) {
             case HALF_NOTE:
                 draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.half_note, null);
+                size_multiplier_x = size_multiplier_y = 0.15f;
                 break;
             case QUARTER_NOTE:
                 draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.quarter_note, null);
+                size_multiplier_x = size_multiplier_y = 0.17f;
                 break;
             case WHOLE_NOTE:
                 draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.whole_note, null);
+                size_multiplier_x = size_multiplier_y = 0.0345f;
                 break;
             case STAFF:
                 draggable_img = ResourcesCompat.getDrawable(getResources(), R.drawable.staff, null);
+                size_multiplier_x = 0.15f;
+                size_multiplier_y = 0.1f;
                 break;
         }
+        // set the width/height
+        drag_img_width = draggable_img.getIntrinsicWidth() * size_multiplier_x;
+        drag_img_height = draggable_img.getIntrinsicHeight() * size_multiplier_y;
     }
 
     public void randomizeDraggable_img() {
