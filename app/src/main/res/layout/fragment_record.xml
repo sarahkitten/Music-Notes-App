@@ -20,10 +20,9 @@
 
     <TextView
         android:id="@+id/record_filename"
-        android:layout_width="355dp"
-        android:layout_height="63dp"
+        android:layout_width="335dp"
+        android:layout_height="52dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:adjustViewBounds="true"
         android:fontFamily="@font/open_sans_semibold"
@@ -33,25 +32,25 @@
         android:textAlignment="center"
         android:textColor="@color/colorDarkBlue"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintVertical_bias="0.64" />
 
     <Chronometer
         android:id="@+id/record_timer"
-        android:layout_width="204dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_width="197dp"
+        android:layout_height="76dp"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
         android:fontFamily="@font/open_sans_light"
+        android:scaleType="matrix"
         android:textColor="@color/colorDarkBlue"
         android:textSize="64sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
-        app:layout_constraintHorizontal_bias="0.579"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        android:scaleType="matrix"
-        android:adjustViewBounds="true"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <ImageButton
         android:id="@+id/record_btn"
@@ -102,7 +101,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp"
-        app:layout_constraintGuide_percent="0.55" />
+        app:layout_constraintGuide_percent="0.58" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
