@@ -20,8 +20,8 @@
 
     <TextView
         android:id="@+id/record_filename"
-        android:layout_width="335dp"
-        android:layout_height="52dp"
+        android:layout_width="331dp"
+        android:layout_height="67dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:adjustViewBounds="true"
@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:layout_constraintVertical_bias="0.64" />
+        app:layout_constraintVertical_bias="0.742" />
 
     <Chronometer
         android:id="@+id/record_timer"
@@ -49,6 +49,7 @@
         android:textColor="@color/colorDarkBlue"
         android:textSize="64sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
+        app:layout_constraintHorizontal_bias="0.556"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
         app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
