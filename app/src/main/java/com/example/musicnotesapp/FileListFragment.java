@@ -93,6 +93,7 @@ public class FileListFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+
         switch(view.getId()){
             case R.id.Record:
                 Log.d(TAG, "onClick: Record button clicked");
