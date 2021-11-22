@@ -8,9 +8,11 @@
 
     <ImageView
         android:id="@+id/record_header_image"
-        android:layout_width="339dp"
-        android:layout_height="241dp"
-        android:layout_marginTop="70dp"
+        android:layout_width="261dp"
+        android:layout_height="204dp"
+        android:layout_marginTop="52dp"
+        android:adjustViewBounds="true"
+        android:scaleType="matrix"
         android:src="@drawable/home_illustration"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
@@ -18,13 +20,15 @@
 
     <TextView
         android:id="@+id/record_filename"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="355dp"
+        android:layout_height="63dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
+        android:adjustViewBounds="true"
         android:fontFamily="@font/open_sans_semibold"
         android:lineHeight="32dp"
+        android:scaleType="matrix"
         android:text="Press the mic button \n to start recording"
         android:textAlignment="center"
         android:textColor="@color/colorDarkBlue"
@@ -37,7 +41,7 @@
     <Chronometer
         android:id="@+id/record_timer"
         android:layout_width="204dp"
-        android:layout_height="95dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/open_sans_light"
         android:textColor="@color/colorDarkBlue"
@@ -45,18 +49,22 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintHorizontal_bias="0.579"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        android:scaleType="matrix"
+        android:adjustViewBounds="true"/>
 
     <ImageButton
         android:id="@+id/record_btn"
         android:layout_width="151dp"
-        android:layout_height="149dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@android:color/white"
         android:src="@drawable/record_btn_stopped"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toTopOf="@+id/guideline4" />
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        android:scaleType="matrix"
+        android:adjustViewBounds="true"/>
 
     <Button
         android:id="@+id/go_back"
@@ -64,11 +72,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginBottom="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="matrix"
         android:text="return"
         app:layout_constraintBottom_toTopOf="@+id/record_header_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
