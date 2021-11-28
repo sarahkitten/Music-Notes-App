@@ -102,11 +102,11 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
                 navController.navigate(R.id.action_drawingFragment_to_fileListFragment);
                 break;
 
-            case R.id.colorid:  // invoke color select
+            case R.id.Record:  // invoke color select
                 showColorDialog();
                 break;
 
-            case R.id.lineWidth:  // invoke line width select
+            case R.id.Note:  // invoke line width select
                 showLineWidthDialog();
                 break;
 

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/colorid"
+        android:id="@+id/Record"
         android:icon="@drawable/color_palette"
         android:title="@string/Color"
         app:showAsAction="always" />
@@ -27,7 +27,7 @@
         android:id="@+id/backId"
         android:title="@string/back" />
     <item
-        android:id="@+id/lineWidth"
+        android:id="@+id/Note"
         android:icon="@drawable/stroke_width"
         android:title="@string/lineWidth"
         app:showAsAction="always" />

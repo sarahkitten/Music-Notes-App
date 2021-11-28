@@ -10,12 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AudioListAdpater extends RecyclerView.Adapter<AudioListAdpater.AudioViewHolder>{
+public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.AudioViewHolder>{
 
-    private File[] allFiles;
+    private List<File> allFiles;
+    //private File[] allFiles;
 
-    public AudioListAdpater(File[] allFiles){
+    public AudioListAdapter(List<File> allFiles){//File[] allFiles){
         this.allFiles = allFiles; // assign allFiles var from FileListFragment to this
     }
 
@@ -28,13 +31,13 @@ public class AudioListAdpater extends RecyclerView.Adapter<AudioListAdpater.Audi
 
     @Override
     public void onBindViewHolder(@NonNull AudioViewHolder holder, int position) {
-        holder.list_title.setText(allFiles[position].getName());
-        holder.list_date.setText(allFiles[position].lastModified() + "");
+        holder.list_title.setText(allFiles.get(position).getName());
+        holder.list_date.setText(allFiles.get(position).lastModified() + "");
     }
 
     @Override
     public int getItemCount() {
-        return allFiles.length;
+        return allFiles.size();
     }
 
     public class AudioViewHolder extends RecyclerView.ViewHolder{
