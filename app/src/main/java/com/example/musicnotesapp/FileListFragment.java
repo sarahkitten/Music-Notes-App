@@ -142,6 +142,10 @@ public class FileListFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "onClick: Note button clicked");
                 navController.navigate(R.id.action_fileListFragment_to_drawingFragment);
                 break;
+
+            case R.id.newdir: //new directory
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);

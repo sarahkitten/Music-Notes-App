@@ -41,10 +41,11 @@
         <entry key="app/src/main/res/layout/fragment_drawing.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/fragment_file_list.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_record.xml" value="0.15625" />
+        <entry key="app/src/main/res/layout/note_list_item.xml" value="0.14402173913043478" />
         <entry key="app/src/main/res/layout/player_sheet.xml" value="0.15625" />
-        <entry key="app/src/main/res/layout/single_list_item.xml" value="0.15625" />
+        <entry key="app/src/main/res/layout/single_list_item.xml" value="0.165" />
         <entry key="app/src/main/res/layout/width_dialog.xml" value="0.15625" />
-        <entry key="app/src/main/res/menu/file_list_menu.xml" value="0.16770833333333332" />
+        <entry key="app/src/main/res/menu/file_list_menu.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.16770833333333332" />
       </map>
     </option>

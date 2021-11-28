@@ -10,15 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.AudioViewHolder>{
 
     private List<File> allFiles;
-    //private File[] allFiles;
 
-    public AudioListAdapter(List<File> allFiles){//File[] allFiles){
+    public AudioListAdapter(List<File> allFiles){
         this.allFiles = allFiles; // assign allFiles var from FileListFragment to this
     }
 
