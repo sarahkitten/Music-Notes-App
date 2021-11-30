@@ -37,8 +37,10 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
     private PikassoView pikassoView;
     private AlertDialog.Builder currentAlertDialog;
     private ImageView widthImageView;
+    private ImageView textImageView;
     private AlertDialog dialogLineWidth;
     private AlertDialog colorDialog;
+    private AlertDialog textDialog;
 
     private SeekBar alphaSeekBar;
     private SeekBar redSeekBar;
@@ -104,6 +106,10 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
 
             case R.id.Record:  // invoke color select
                 showColorDialog();
+                break;
+
+            case R.id.textId:  // invoke color select
+                showTextDialog();
                 break;
 
             case R.id.Note:  // invoke line width select
@@ -199,6 +205,64 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
 
         dialogLineWidth.show();
     }
+
+    void showTextDialog() {
+        // TODO: show text input dialog with text size seekbar and preview image
+
+        currentAlertDialog = new AlertDialog.Builder(requireActivity());  // create alert dialog
+        View view = getLayoutInflater().inflate(R.layout.text_dialog, null);  // show dialog
+
+        SeekBar textSizeSeekbar = view.findViewById(R.id.textSizeSeekBar);
+        Button setTextButton = view.findViewById(R.id.textDialogButton);
+        textImageView = view.findViewById(R.id.imageViewId);
+        setTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // set line width and dismiss dialog
+                pikassoView.setTextSize(textSizeSeekbar.getProgress());
+                textDialog.dismiss();
+                currentAlertDialog = null;
+            }
+        });
+
+        textSizeSeekbar.setOnSeekBarChangeListener(textSizeSeekbarChange);
+        textSizeSeekbar.setProgress(pikassoView.getTextSize());
+
+        currentAlertDialog.setView(view);
+        textDialog = currentAlertDialog.create();
+        textDialog.setTitle("Enter text");
+
+        textDialog.show();
+    }
+
+    private SeekBar.OnSeekBarChangeListener textSizeSeekbarChange = new SeekBar.OnSeekBarChangeListener() {
+        Bitmap bitmap = Bitmap.createBitmap(600, 150, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            // set stroke width and preview image based on seekbar progress
+
+            Paint p = new Paint();
+            p.setColor(Color.BLACK);
+            p.setTextSize(progress);
+            p.setShadowLayer(1f, 0f, 1f, Color.WHITE); // text shadow
+
+            bitmap.eraseColor(Color.WHITE);
+            canvas.drawText(pikassoView.typedText, 30, 150, p);
+            textImageView.setImageBitmap(bitmap);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
 
     private SeekBar.OnSeekBarChangeListener colorSeekBarChanged = new SeekBar.OnSeekBarChangeListener() {
         @Override

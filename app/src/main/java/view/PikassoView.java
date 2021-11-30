@@ -299,6 +299,14 @@ public class PikassoView extends View {
         return (int) paintLine.getStrokeWidth();
     }
 
+    public void setTextSize(int size) {
+        paintText.setTextSize(size);
+    }
+
+    public int getTextSize() {
+        return (int) paintText.getTextSize();
+    }
+
     public void setDraggable_img(MusicItem item) {
         // set the draggable image to a drawable in the res folder
         float size_multiplier_x = 1f;

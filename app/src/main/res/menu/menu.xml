@@ -24,6 +24,9 @@
         android:id="@+id/toggleDrawingId"
         android:title="@string/toggleDrawing" />
     <item
+        android:id="@+id/textId"
+        android:title="@string/input_text" />
+    <item
         android:id="@+id/backId"
         android:title="@string/back" />
     <item

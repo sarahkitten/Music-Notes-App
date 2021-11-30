@@ -21,4 +21,6 @@
     <string name="back">Return to Menu</string>
     <string name="randomize">[randomize note type]</string>
     <string name="toggleDrawing">[toggle drawing]</string>
+    <string name="set_text">Set Text</string>
+    <string name="input_text">Input Text</string>
 </resources>
