@@ -46,6 +46,8 @@ public class PikassoView extends View {
     private Canvas bitmapCanvas;  // draws the bitmap
     private Stack<Path> pathHistory = new Stack<Path>();
     private Stack<Paint> lineHistory = new Stack<Paint>();
+    private Stack<Drawable> imgHistory = new Stack<Drawable>();
+    private Stack<Integer> isDraw = new Stack<Integer>();
     private Paint paintScreen;
     private Paint paintLine;
     private HashMap<Integer, Path> pathMap;
@@ -216,6 +218,7 @@ public class PikassoView extends View {
         Path path = pathMap.get(pointerId);  // get the corresponding path
         pathHistory.push(new Path(path));
         lineHistory.push(new Paint(paintLine));
+        isDraw.push(1);
         bitmapCanvas.drawPath(path, paintLine);  // draw to bitmapCanvas
         path.reset();  // reset path
     }
@@ -241,6 +244,10 @@ public class PikassoView extends View {
 
     private void imgDragTouchEnded(int pointerId) {
         // implement? might need something here for undo
+        Drawable drawable = draggable_img.mutate();
+        imgHistory.push(drawable);
+        isDraw.push(0);
+        Log.d(null, String.valueOf(imgHistory.size()));
     }
 
     private void drawDraggable_img(float x, float y) {
@@ -311,8 +318,10 @@ public class PikassoView extends View {
     public void clear() {
         pathMap.clear();  // removes all of the paths
         previousPointMap.clear();  // clear map of previous points
-        pathHistory.clear();
-        lineHistory.clear();
+        pathHistory.clear(); // clear line and path history
+        lineHistory.clear(); // clear image history
+        imgHistory.clear();
+        isDraw.clear();
         bitmap.eraseColor(Color.WHITE);  // erase bitmap
         invalidate(); // refresh the screen
     }
@@ -377,16 +386,25 @@ public class PikassoView extends View {
     }
 
     public void undo() {
-        if (pathHistory.size() > 0)
+        if (isDraw.size() > 0)
         {
-            pathHistory.pop(); // Remove the last path from the history
-            bitmap.eraseColor(Color.WHITE);
+            int n = isDraw.pop();
+            if (n == 1) {
+                pathHistory.pop(); // Remove the last path from the history
+            }
+            else {
+                imgHistory.pop();
+            }
 
+            bitmap.eraseColor(Color.WHITE);
             // Draw the paths and paint lines which are still in the history
-            for (int i = 0; i < pathHistory.size(); i++)
-            {
+            for (int i = 0; i < pathHistory.size(); i++) {
                 bitmapCanvas.drawPath(pathHistory.get(i), lineHistory.get(i));
             }
+            for (int i = 0; i < imgHistory.size(); i++) {
+                imgHistory.get(i).draw(bitmapCanvas);  // draw image
+            }
         }
+        Log.d(null, "UNDO");
     }
 }
