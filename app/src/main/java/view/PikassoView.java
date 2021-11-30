@@ -50,14 +50,16 @@ public class PikassoView extends View {
     private Stack<Integer> isDraw = new Stack<Integer>();
     private Paint paintScreen;
     private Paint paintLine;
+    private Paint paintText;
     private HashMap<Integer, Path> pathMap;
     private HashMap<Integer, Point> previousPointMap;
-    private boolean isDrawMode = false;  // indicates drawing lines rather than drag/dropping notes
-    // ^ set this to true for regular drawing
+    private String inputMode = "draw"; // input mode can be "draw", "drag", or "type"
 
     Drawable draggable_img;  // image to drag/drop
     private float drag_img_width;  // x dimension of draggable img
     private float drag_img_height;  // y dimension of draggable img
+
+    public String typedText = "text";  // the text to be dragged/dropped in typing mode
 
 
     public PikassoView(Context context, @Nullable AttributeSet attrs) {
@@ -75,6 +77,13 @@ public class PikassoView extends View {
     void init() {
         // Initialization of PikassoView
         paintScreen = new Paint();
+
+        paintText = new Paint();
+        paintText.setAntiAlias(true); // make lines smooth
+        paintText.setColor(Color.BLACK); // initialize text color
+        paintText.setTextSize(100); // text size in pixels
+        paintText.setShadowLayer(1f, 0f, 1f, Color.WHITE); // text shadow
+
         paintLine = new Paint();
         paintLine.setAntiAlias(true); // make lines smooth
         paintLine.setColor(Color.BLACK); // initialize line color
@@ -133,29 +142,38 @@ public class PikassoView extends View {
     }
 
     private void touchStarted(float x, float y, int pointerId) {
-        if (isDrawMode) {
-            drawingTouchStarted(x, y, pointerId);
-        } else {
-            // else, drag and drop
-            imgDragTouchStarted(x, y, pointerId);
+        switch (inputMode) {
+            case "draw":
+                drawingTouchStarted(x, y, pointerId);
+                break;
+            case "drag":
+            case "type":
+                imgDragTouchStarted(x, y, pointerId);
+                break;
         }
     }
 
     private void touchMoved(MotionEvent event) {
-        if (isDrawMode) {
-            drawingTouchMoved(event);
-        } else {
-            // else, drag and drop
-            imgDragTouchMoved(event);
+        switch (inputMode) {
+            case "draw":
+                drawingTouchMoved(event);
+                break;
+            case "drag":
+            case "type":
+                imgDragTouchMoved(event);
+                break;
         }
     }
 
     private void touchEnded(int pointerId) {
-        if (isDrawMode) {
-            drawingTouchEnded(pointerId);
-        } else {
-            // else, drag and drop
-            imgDragTouchEnded(pointerId);
+        switch (inputMode) {
+            case "draw":
+                drawingTouchEnded(pointerId);
+                break;
+            case "drag":
+            case "type":
+                imgDragTouchEnded(pointerId);
+                break;
         }
     }
 
@@ -252,12 +270,17 @@ public class PikassoView extends View {
 
     private void drawDraggable_img(float x, float y) {
         // draw current draggable image centered on coords x, y
-        draggable_img.setBounds(  // set img bounds (size/position)
-                (int) (x - drag_img_width /2), // left
-                (int) (y - drag_img_height /2), // top
-                (int) (x + drag_img_width /2),  // right
-                (int) (y + drag_img_height /2));  // bottom
-        draggable_img.draw(bitmapCanvas);  // draw image
+        if (inputMode.equals("drag")) {  // drag image
+            draggable_img.setBounds(  // set img bounds (size/position)
+                    (int) (x - drag_img_width /2), // left
+                    (int) (y - drag_img_height /2), // top
+                    (int) (x + drag_img_width /2),  // right
+                    (int) (y + drag_img_height /2));  // bottom
+            draggable_img.draw(bitmapCanvas);  // draw image
+        } else {  // drag text
+            bitmapCanvas.drawText(typedText, x, y, paintText);
+        }
+
     }
 
     public void setDrawingColor(int color) {
@@ -310,9 +333,19 @@ public class PikassoView extends View {
         setDraggable_img(MusicItem.values()[pick]);
     }
 
-    public void toggleDrawing() {
-        // temp: toggle between drawing and drag/drop
-        isDrawMode = !isDrawMode;
+    public void rotateInputMode() {
+        // temp: go to next input mode
+        switch (inputMode) {
+            case "draw":
+                inputMode = "drag";
+                break;
+            case "drag":
+                inputMode = "type";
+                break;
+            case "type":
+                inputMode = "draw";
+                break;
+        }
     }
 
     public void clear() {

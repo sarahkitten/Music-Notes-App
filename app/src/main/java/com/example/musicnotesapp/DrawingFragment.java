@@ -118,7 +118,7 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.toggleDrawingId:  // temporary: toggle between drawing and drag/drop
-                pikassoView.toggleDrawing();
+                pikassoView.rotateInputMode();
                 break;
         }
 
