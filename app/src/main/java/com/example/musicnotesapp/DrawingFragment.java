@@ -18,6 +18,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,8 +28,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 
 import view.PikassoView;
@@ -47,6 +51,11 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
     private SeekBar greenSeekBar;
     private SeekBar blueSeekBar;
     private View colorView;
+
+    private Bitmap textBitmap;
+    private Canvas textCanvas;
+    private Paint textPaint;
+    private String textValue;
 
     private NavController navController; // have nav controller so we navigate through fragments
 
@@ -108,7 +117,8 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
                 showColorDialog();
                 break;
 
-            case R.id.textId:  // invoke color select
+            case R.id.textId:  // show text dialog and set to text mode
+                pikassoView.inputMode = "type";
                 showTextDialog();
                 break;
 
@@ -116,15 +126,16 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
                 showLineWidthDialog();
                 break;
 
-            case R.id.eraseId:  // invoke erase
-                break;
-
             case R.id.randomizeId:  // temporary: randomize note type for drag and drop
                 pikassoView.randomizeDraggable_img();
                 break;
 
-            case R.id.toggleDrawingId:  // temporary: toggle between drawing and drag/drop
-                pikassoView.rotateInputMode();
+            case R.id.drawingMode:  // set to drawing mode
+                pikassoView.inputMode = "draw";
+                break;
+
+            case R.id.draggingMode:  // set to drag and drop mode
+                pikassoView.inputMode = "drag";
                 break;
         }
 
@@ -207,22 +218,53 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
     }
 
     void showTextDialog() {
-        // TODO: show text input dialog with text size seekbar and preview image
+        // show text input dialog with text size seekbar and preview image
 
         currentAlertDialog = new AlertDialog.Builder(requireActivity());  // create alert dialog
         View view = getLayoutInflater().inflate(R.layout.text_dialog, null);  // show dialog
 
+        // access components
         SeekBar textSizeSeekbar = view.findViewById(R.id.textSizeSeekBar);
         Button setTextButton = view.findViewById(R.id.textDialogButton);
         textImageView = view.findViewById(R.id.imageViewId);
+        EditText editText = (EditText) view.findViewById(R.id.editTextId);
+
+        // initialize text box to most recent text input
+        textValue = pikassoView.typedText;
+        editText.setText(textValue, TextView.BufferType.EDITABLE);
+
+        // initialize text preview
+        textBitmap = Bitmap.createBitmap(1000, 200, Bitmap.Config.ARGB_8888);
+        textCanvas = new Canvas(textBitmap);
+        textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setShadowLayer(1f, 0f, 1f, Color.WHITE); // text shadow
+        updateTextPreview();
+
         setTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // set line width and dismiss dialog
+                // set pikassoview text value and size and dismiss dialog
+                pikassoView.typedText = textValue;
                 pikassoView.setTextSize(textSizeSeekbar.getProgress());
                 textDialog.dismiss();
                 currentAlertDialog = null;
             }
+        });
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // set text preview to typed text
+                textValue = editText.getText().toString();
+                updateTextPreview();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
         textSizeSeekbar.setOnSeekBarChangeListener(textSizeSeekbarChange);
@@ -235,33 +277,27 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
         textDialog.show();
     }
 
+    private void updateTextPreview() {
+        textBitmap.eraseColor(Color.WHITE);
+        textCanvas.drawText(textValue, 0, 150, textPaint);
+        textImageView.setImageBitmap(textBitmap);
+    }
+
     private SeekBar.OnSeekBarChangeListener textSizeSeekbarChange = new SeekBar.OnSeekBarChangeListener() {
-        Bitmap bitmap = Bitmap.createBitmap(600, 150, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
+
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            // set stroke width and preview image based on seekbar progress
-
-            Paint p = new Paint();
-            p.setColor(Color.BLACK);
-            p.setTextSize(progress);
-            p.setShadowLayer(1f, 0f, 1f, Color.WHITE); // text shadow
-
-            bitmap.eraseColor(Color.WHITE);
-            canvas.drawText(pikassoView.typedText, 30, 150, p);
-            textImageView.setImageBitmap(bitmap);
+            // set preview image text size based on seekbar progress
+            textPaint.setTextSize(progress);
+            updateTextPreview();
         }
 
         @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
+        public void onStartTrackingTouch(SeekBar seekBar) {}
 
         @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
+        public void onStopTrackingTouch(SeekBar seekBar) {}
     };
 
     private SeekBar.OnSeekBarChangeListener colorSeekBarChanged = new SeekBar.OnSeekBarChangeListener() {

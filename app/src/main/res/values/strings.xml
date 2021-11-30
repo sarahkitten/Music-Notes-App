@@ -23,4 +23,8 @@
     <string name="toggleDrawing">[toggle drawing]</string>
     <string name="set_text">Set Text</string>
     <string name="input_text">Input Text</string>
+    <string name="preview">Preview:</string>
+    <string name="size">Size:</string>
+    <string name="drag_and_drop">Drag and drop</string>
+    <string name="draw">Draw</string>
 </resources>

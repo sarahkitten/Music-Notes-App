@@ -5,11 +5,20 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageViewId"
+    <EditText
+        android:id="@+id/editTextId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/stroke_width" />
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
+
+    <TextView
+        android:id="@+id/sizeTextView"
+        android:paddingTop="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/size" />
 
     <SeekBar
         android:id="@+id/textSizeSeekBar"
@@ -18,9 +27,23 @@
         android:layout_height="wrap_content"
         android:max="200" />
 
+    <TextView
+        android:id="@+id/previewTextView"
+        android:paddingTop="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preview" />
+
+    <ImageView
+        android:id="@+id/imageViewId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/stroke_width" />
+
     <Button
         android:id="@+id/textDialogButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/set_text" />
+
 </LinearLayout>

@@ -53,7 +53,7 @@ public class PikassoView extends View {
     private Paint paintText;
     private HashMap<Integer, Path> pathMap;
     private HashMap<Integer, Point> previousPointMap;
-    private String inputMode = "draw"; // input mode can be "draw", "drag", or "type"
+    public String inputMode = "draw"; // input mode can be "draw", "drag", or "type"
 
     Drawable draggable_img;  // image to drag/drop
     private float drag_img_width;  // x dimension of draggable img
