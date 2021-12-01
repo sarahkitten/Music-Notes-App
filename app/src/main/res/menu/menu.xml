@@ -15,9 +15,6 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="@string/Save" />
     <item
-        android:id="@+id/undoId"
-        android:title="@string/undo" />
-    <item
         android:id="@+id/randomizeId"
         android:title="@string/randomize" />
     <item
@@ -35,8 +32,8 @@
         android:title="@string/lineWidth"
         app:showAsAction="always" />
     <item
-        android:id="@+id/eraseId"
-        android:icon="@android:drawable/ic_notification_clear_all"
+        android:id="@+id/undoId"
+        android:icon="@drawable/undo_icon"
         android:title="@string/erase"
         app:showAsAction="always" />
 </menu>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/draw_mode"
+        android:icon="@drawable/draw_mode"
+        android:title="Draw"/>
+
+    <item
+        android:id="@+id/note_mode"
+        android:icon="@drawable/note_mode"
+        android:title="Note"/>
+
+    <item
+        android:id="@+id/text_mode"
+        android:icon="@drawable/text_mode"
+        android:title="Text"/>
+
+</menu>
