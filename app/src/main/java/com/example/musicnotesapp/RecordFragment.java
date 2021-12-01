@@ -2,6 +2,8 @@ package com.example.musicnotesapp;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -99,12 +101,25 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.go_back: // if pressed back button
-                // goto file view fragment
-                navController.navigate(R.id.action_recordFragment_to_fileListFragment);
+                if(isRecording){ // if is recording
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext()); //make alert box
+                    alertDialog.setPositiveButton("OKAY", new DialogInterface.OnClickListener() { // make OKAY button
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) { // if clicked ok
+                            // goto file view fragment
+                            navController.navigate(R.id.action_recordFragment_to_fileListFragment);
+                        }
+                    });
+                    alertDialog.setNegativeButton("CANCEL", null); // make cancel button
+                    alertDialog.setTitle("Audio Still Recording"); // title of alert box
+                    alertDialog.setMessage("Are you sure, you want to stop the recording?"); // if pressed okay
+                    alertDialog.create().show(); // create and show the alert box
+                } else { // if not recording
+                    navController.navigate(R.id.action_recordFragment_to_fileListFragment); // go to file fragment
+                }
                 break;
         }
     }
-
     private void stopRecording() {
         timer.stop(); // stop the timer
 
@@ -155,6 +170,14 @@ public class RecordFragment extends Fragment implements View.OnClickListener {
         else{ // if dont have permission request
             ActivityCompat.requestPermissions(getActivity(), new String[]{recordPermission}, PERMISSION_CODE);
             return false;
+        }
+    }
+
+    @Override
+    public void onStop(){ // on leaving current fragment
+        super.onStop(); // if navigate to diff fragment
+        if(isRecording) { // if recording
+            stopRecording(); //stop recording audio
         }
     }
 }
