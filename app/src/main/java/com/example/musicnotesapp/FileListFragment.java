@@ -4,6 +4,8 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +20,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ImageView;
+import android.app.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +35,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -215,13 +221,31 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
     }
 
     @Override
-    public void onClickListener(File file, int position) {
+    public void onClickListener(File file, int position)  {
         fileToPlay = file;
-        if(isPlaying){
-            stopAudio();
-            playAudio(fileToPlay);
-        } else {
-            playAudio(fileToPlay);
+        if (fileToPlay.getName().endsWith(".3gp")) {
+            if (isPlaying) {
+                stopAudio();
+                playAudio(fileToPlay);
+            } else {
+                playAudio(fileToPlay);
+            }
+        }
+        else if (fileToPlay.getName().endsWith(".jpg")) {
+            try {
+                Log.d("file: ", fileToPlay.getAbsolutePath());
+                File f = new File(fileToPlay.getAbsolutePath());
+                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+
+                View view;
+                LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
+                view = inflater.inflate(R.layout.image_picker,  null);
+                // Code to retrieve image
+                ImageView img = (ImageView) view.findViewById(R.id.imgPicker);
+                img.setImageBitmap(b);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 

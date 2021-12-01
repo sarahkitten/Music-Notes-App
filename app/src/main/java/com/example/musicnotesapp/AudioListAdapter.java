@@ -1,5 +1,6 @@
 package com.example.musicnotesapp;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,10 @@ import java.util.List;
 
 public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.AudioViewHolder>{
 
-    private List<File> allFiles;
+    private final List<File> allFiles;
     private TimeAgo timeAgo;
 
-    private onItemListClick onItemListClick;
+    private final onItemListClick onItemListClick;
 
     public AudioListAdapter(List<File> allFiles, onItemListClick onItemListClick){
         this.allFiles = allFiles; // assign allFiles var from FileListFragment to this
@@ -35,6 +36,15 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
     @Override
     public void onBindViewHolder(@NonNull AudioViewHolder holder, int position) {
         holder.list_title.setText(allFiles.get(position).getName());
+        Log.d("Image:", holder.list_title.getText().toString());
+        if(holder.list_title.getText().toString().endsWith("jpg")) {
+            holder.itemView.findViewById(R.id.list_image_view).setVisibility(View.INVISIBLE);
+            holder.list_image = holder.itemView.findViewById(R.id.list_image_view2);
+            }
+        else
+            holder.itemView.findViewById(R.id.list_image_view2).setVisibility(View.INVISIBLE);
+            holder.list_image = holder.itemView.findViewById(R.id.list_image_view);
+
         holder.list_date.setText(timeAgo.getTimeAgo(allFiles.get(position).lastModified()));
 
     }
@@ -47,15 +57,15 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
     public class AudioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView list_image;
-        private TextView list_title;
-        private TextView list_date;
+        private final TextView list_title;
+        private final TextView list_date;
 
         public AudioViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            list_image = itemView.findViewById(R.id.list_image_view);
             list_title = itemView.findViewById(R.id.list_title);
             list_date = itemView.findViewById(R.id.list_date);
+            list_image = itemView.findViewById(R.id.list_image_view);
 
             itemView.setOnClickListener(this);
 
