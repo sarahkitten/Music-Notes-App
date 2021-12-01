@@ -2,18 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/draw_mode"
+        android:id="@+id/drawingMode"
         android:icon="@drawable/draw_mode"
-        android:title="Draw"/>
-
+        android:title="@string/draw" />
     <item
-        android:id="@+id/note_mode"
+        android:id="@+id/draggingMode"
         android:icon="@drawable/note_mode"
-        android:title="Note"/>
-
+        android:title="@string/drag_and_drop" />
     <item
-        android:id="@+id/text_mode"
+        android:id="@+id/textId"
         android:icon="@drawable/text_mode"
-        android:title="Text"/>
+        android:title="@string/input_text" />
 
 </menu>

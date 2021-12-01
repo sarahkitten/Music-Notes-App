@@ -265,7 +265,6 @@ public class PikassoView extends View {
         Drawable drawable = draggable_img.mutate();
         imgHistory.push(drawable);
         isDraw.push(0);
-        Log.d(null, String.valueOf(imgHistory.size()));
     }
 
     private void drawDraggable_img(float x, float y) {
@@ -446,6 +445,5 @@ public class PikassoView extends View {
                 imgHistory.get(i).draw(bitmapCanvas);  // draw image
             }
         }
-        Log.d(null, "UNDO");
     }
 }

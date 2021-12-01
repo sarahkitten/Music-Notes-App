@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,9 +35,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import view.PikassoView;
 
-public class DrawingFragment extends Fragment implements View.OnClickListener {
+public class DrawingFragment extends Fragment implements OnClickListener {
 
     private PikassoView pikassoView;
     private AlertDialog.Builder currentAlertDialog;
@@ -58,6 +61,8 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
     private String textValue;
 
     private NavController navController; // have nav controller so we navigate through fragments
+
+    private com.google.android.material.bottomnavigation.BottomNavigationView bottomNavigationView;
 
 
     public DrawingFragment() {
@@ -83,7 +88,37 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
 
         navController = Navigation.findNavController(view); // set navController
         pikassoView = view.findViewById(R.id.view);  // set pikassoView
+
+        bottomNavigationView = view.findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnItemSelectedListener(listener);
     }
+
+    private BottomNavigationView.OnItemSelectedListener listener =
+            new com.google.android.material.bottomnavigation.BottomNavigationView.OnItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.drawingMode:
+                            Log.i(TAG, "drawingMode: called");
+                            pikassoView.inputMode = "draw";
+                            break;
+
+                        case R.id.draggingMode:
+                            Log.i(TAG, "draggingMode: called");
+                            pikassoView.inputMode = "drag";
+                            break;
+
+
+                        case R.id.textId:
+                            Log.i(TAG, "textID: called");
+                            pikassoView.inputMode = "type";
+                            showTextDialog();
+                            break;
+                    }
+                    return true;
+                }
+            };
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -117,25 +152,12 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
                 showColorDialog();
                 break;
 
-            case R.id.textId:  // show text dialog and set to text mode
-                pikassoView.inputMode = "type";
-                showTextDialog();
-                break;
-
             case R.id.Note:  // invoke line width select
                 showLineWidthDialog();
                 break;
 
             case R.id.randomizeId:  // temporary: randomize note type for drag and drop
                 pikassoView.randomizeDraggable_img();
-                break;
-
-            case R.id.drawingMode:  // set to drawing mode
-                pikassoView.inputMode = "draw";
-                break;
-
-            case R.id.draggingMode:  // set to drag and drop mode
-                pikassoView.inputMode = "drag";
                 break;
         }
 
@@ -166,7 +188,7 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
         blueSeekBar.setProgress(Color.blue(color));
 
         Button setColorButton = view.findViewById(R.id.setColorButton);
-        setColorButton.setOnClickListener(new View.OnClickListener() {
+        setColorButton.setOnClickListener(new OnClickListener() {
             // set drawing color to the selected ARGB values
             @Override
             public void onClick(View v) {
@@ -197,7 +219,7 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
         SeekBar widthSeekbar = view.findViewById(R.id.widthSeekBar);
         Button setLineWidthButton = view.findViewById(R.id.widthDialogButton);
         widthImageView = view.findViewById(R.id.imageViewId);
-        setLineWidthButton.setOnClickListener(new View.OnClickListener() {
+        setLineWidthButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // set line width and dismiss dialog
@@ -241,7 +263,7 @@ public class DrawingFragment extends Fragment implements View.OnClickListener {
         textPaint.setShadowLayer(1f, 0f, 1f, Color.WHITE); // text shadow
         updateTextPreview();
 
-        setTextButton.setOnClickListener(new View.OnClickListener() {
+        setTextButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // set pikassoview text value and size and dismiss dialog
