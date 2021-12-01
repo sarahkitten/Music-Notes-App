@@ -12,7 +12,4 @@
         android:icon="@drawable/stroke_width"
         android:title="@string/Note"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/newdir"
-        android:title="@string/newdir" />
 </menu>

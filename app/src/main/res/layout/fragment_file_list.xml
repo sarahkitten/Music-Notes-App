@@ -14,5 +14,6 @@
         android:layout_height="match_parent" />
 
     <include layout="@layout/player_sheet"/>
+    <include layout="@layout/image_picker"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
