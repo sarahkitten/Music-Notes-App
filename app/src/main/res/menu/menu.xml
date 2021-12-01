@@ -8,6 +8,11 @@
         android:title="@string/Color"
         app:showAsAction="always" />
     <item
+        android:id="@+id/Note"
+        android:icon="@drawable/stroke_width"
+        android:title="@string/lineWidth"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/clearId"
         android:title="@string/clear" />
     <item
@@ -15,25 +20,25 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="@string/Save" />
     <item
+        android:id="@+id/undoId"
+        android:icon="@drawable/undo"
+        android:title="@string/undo"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/randomizeId"
         android:title="@string/randomize" />
     <item
-        android:id="@+id/toggleDrawingId"
-        android:title="@string/toggleDrawing" />
+        android:id="@+id/drawingMode"
+        android:title="@string/draw" />
+    <item
+        android:id="@+id/draggingMode"
+        android:title="@string/drag_and_drop" />
     <item
         android:id="@+id/textId"
         android:title="@string/input_text" />
     <item
         android:id="@+id/backId"
         android:title="@string/back" />
-    <item
-        android:id="@+id/Note"
-        android:icon="@drawable/stroke_width"
-        android:title="@string/lineWidth"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/undoId"
-        android:icon="@drawable/undo_icon"
-        android:title="@string/erase"
-        app:showAsAction="always" />
+
+
 </menu>
