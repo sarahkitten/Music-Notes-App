@@ -25,8 +25,17 @@
         android:title="@string/undo"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/randomizeId"
-        android:title="@string/randomize" />
+        android:id="@+id/quarterNote"
+        android:title="Quarter Note" />
+    <item
+        android:id="@+id/halfNote"
+        android:title="Half Note" />
+    <item
+        android:id="@+id/wholeNote"
+        android:title="Whole Note" />
+    <item
+        android:id="@+id/staff"
+        android:title="Staff" />
     <item
         android:id="@+id/backId"
         android:title="@string/back" />
