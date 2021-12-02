@@ -218,44 +218,33 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
     }
 
     @Override
-    public void onClickListener(File file, int position, boolean delete_flag)  {
+    public void onClickListener(File file, int position)  {
         fileToPlay = file;
-        if(!delete_flag)
-        {
-            if (fileToPlay.getName().endsWith(".3gp")) {
-                if (isPlaying) {
-                    stopAudio();
-                    playAudio(fileToPlay);
-                } else {
-                    playAudio(fileToPlay);
-                }
+        if (fileToPlay.getName().endsWith(".3gp")) {
+            if (isPlaying) {
+                stopAudio();
+                playAudio(fileToPlay);
+            } else {
+                playAudio(fileToPlay);
             }
-            else if (fileToPlay.getName().endsWith(".jpg")) {
-                try {
-                    Log.d("file: ", fileToPlay.getAbsolutePath());
-                    File f = new File(fileToPlay.getAbsolutePath());
-                    Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+        }
+        else if (fileToPlay.getName().endsWith(".jpg")) {
+            try {
+                Log.d("file: ", fileToPlay.getAbsolutePath());
+                File f = new File(fileToPlay.getAbsolutePath());
+                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
 
 //                LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
 //                View view = inflater.inflate(R.layout.image_picker,  null);
 ////                 Code to retrieve image
 //                ImageView img = (ImageView) view.findViewById(R.id.imgPicker);
 //                imageView = view.findViewById(R.id.imgPicker);
-                    ImageView imageView = (ImageView) rootView.findViewById(R.id.imgPicker);
-                    imageView.setImageBitmap(b);
+                ImageView imageView = (ImageView) rootView.findViewById(R.id.imgPicker);
+                imageView.setImageBitmap(b);
 //                navController.navigate(R.id.imgPicker);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
-        }
-        else{ // delete given file
-            fileToPlay.delete(); // maybe delete file
-            allFiles.remove(position); // remove entry from list
-            audioListAdapter = new AudioListAdapter(allFiles, this);
-            FileList.setHasFixedSize(true);
-            FileList.setLayoutManager(new LinearLayoutManager(getContext()));
-            FileList.setAdapter(audioListAdapter);
         }
     }
 
