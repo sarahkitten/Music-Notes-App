@@ -407,6 +407,13 @@ public class PikassoView extends View {
         pathHistory.clear(); // clear line and path history
         lineHistory.clear(); // clear image history
         isDraw.clear();
+        imgX.clear();
+        imgY.clear();
+        imgHistory.clear();
+        txtX.clear();
+        txtY.clear();
+        typedTextHistory.clear();
+        paintTextHistory.clear();
         bitmap.eraseColor(Color.WHITE);  // erase bitmap
         invalidate(); // refresh the screen
     }
