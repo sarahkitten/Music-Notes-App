@@ -65,6 +65,7 @@ public class DrawingFragment extends Fragment implements OnClickListener {
     private Paint textPaint;
     private String textValue;
 
+    private Bundle bundle;
     private String fileToPlay = null;
     boolean saved_file = false; // if this fragment brought up by tapping on it in file frag
 
@@ -92,18 +93,8 @@ public class DrawingFragment extends Fragment implements OnClickListener {
 
         setHasOptionsMenu(true);
 
-        Bundle bundle = this.getArguments();
+        bundle = this.getArguments();
 
-        if(bundle != null){
-            // handle your code here.
-            // Log.d("I HAVE A BUNDLE", bundle.getString("key"));
-
-            fileToPlay = bundle.getString("key");
-            if(fileToPlay != null){
-                saved_file = true;
-            }
-
-        }
         return view;
     }
 
@@ -113,6 +104,17 @@ public class DrawingFragment extends Fragment implements OnClickListener {
 
         navController = Navigation.findNavController(view); // set navController
         pikassoView = view.findViewById(R.id.view);  // set pikassoView
+
+        if(bundle != null){
+            // handle your code here.
+            // Log.d("I HAVE A BUNDLE", bundle.getString("key"));
+
+            fileToPlay = bundle.getString("key");
+            if(fileToPlay != null){
+                saved_file = true;
+                pikassoView.getDrawableImgFromPath(fileToPlay);
+            }
+        }
 
         bottomNavigationView = view.findViewById(R.id.bottom_navigation);
 

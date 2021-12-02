@@ -4,6 +4,8 @@
 
 package view;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
@@ -13,7 +15,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -43,6 +47,7 @@ public class PikassoView extends View {
     public static final float TOUCH_TOLERANCE = 10;
     private Bitmap bitmap;  // where we save the pixels
     private Bitmap bitmapSaveState;  // save state to restore for drag and drop
+    private Boolean hasBitmapLoaded = false;
     private Canvas bitmapCanvas;  // draws the bitmap
     private MusicItem imgCurr;
     private Paint paintScreen;
@@ -55,6 +60,9 @@ public class PikassoView extends View {
     Drawable draggable_img;  // image to drag/drop
     private float drag_img_width;  // x dimension of draggable img
     private float drag_img_height;  // y dimension of draggable img
+
+    private Drawable loadedImg; // image loaded from save
+    private Bitmap bitmapLoaded; // image loaded from save
 
     private Stack<Path> pathHistory = new Stack<Path>();
     private Stack<Paint> lineHistory = new Stack<Paint>();
@@ -105,6 +113,7 @@ public class PikassoView extends View {
         previousPointMap = new HashMap<>();
 
         setDraggable_img(MusicItem.QUARTER_NOTE);
+
     }
 
     @Override
@@ -118,6 +127,11 @@ public class PikassoView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         // called whenever the screen appears
+        if (hasBitmapLoaded) {
+            //canvas.drawBitmap(bitmapLoaded, 0, 0, paintScreen);  // draw bitmap on the screen
+            loadedImg.setBounds(0,0,getWidth(),getHeight());
+            loadedImg.draw(bitmapCanvas);
+        }
         canvas.drawBitmap(bitmap, 0, 0, paintScreen);  // draw bitmap on the screen
         for (Integer key: pathMap.keySet()) {  // loop through pathMap
             canvas.drawPath(pathMap.get(key), paintLine);  // draw pathMap
@@ -149,6 +163,16 @@ public class PikassoView extends View {
         invalidate();  // redraws the screen for each touch event
 
         return true;
+    }
+
+    public void getDrawableImgFromPath(String path) {
+        hasBitmapLoaded = true;
+        File image = new File(path);
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bitmapLoaded = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
+        //bitmapLoaded = Bitmap.createScaledBitmap(bitmapLoaded,100,100,true);
+        loadedImg = new BitmapDrawable(getResources(), bitmapLoaded);
+        Log.i(TAG, "getDrawableImgFromPath: called with path " + path);
     }
 
     private void touchStarted(float x, float y, int pointerId) {
