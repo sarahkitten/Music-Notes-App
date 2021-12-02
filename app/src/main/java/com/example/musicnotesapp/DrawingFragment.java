@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -36,6 +37,10 @@ import android.widget.TextView;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import view.PikassoView;
 
@@ -60,6 +65,9 @@ public class DrawingFragment extends Fragment implements OnClickListener {
     private Paint textPaint;
     private String textValue;
 
+    private String fileToPlay = null;
+    boolean saved_file = false; // if this fragment brought up by tapping on it in file frag
+
     private NavController navController; // have nav controller so we navigate through fragments
 
     private com.google.android.material.bottomnavigation.BottomNavigationView bottomNavigationView;
@@ -79,7 +87,24 @@ public class DrawingFragment extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_drawing, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_drawing, container, false);
+
+        setHasOptionsMenu(true);
+
+        Bundle bundle = this.getArguments();
+
+        if(bundle != null){
+            // handle your code here.
+            // Log.d("I HAVE A BUNDLE", bundle.getString("key"));
+
+            fileToPlay = bundle.getString("key");
+            if(fileToPlay != null){
+                saved_file = true;
+            }
+
+        }
+        return view;
     }
 
     @Override
@@ -270,6 +295,15 @@ public class DrawingFragment extends Fragment implements OnClickListener {
         // initialize text preview
         textBitmap = Bitmap.createBitmap(1000, 200, Bitmap.Config.ARGB_8888);
         textCanvas = new Canvas(textBitmap);
+
+        // TODO
+        if(saved_file){ // if brought up is saved
+            ;
+        }else{ // if user wants to create a new file
+            ;
+        }
+
+
         textPaint = new Paint();
         textPaint.setColor(Color.BLACK);
         textPaint.setShadowLayer(1f, 0f, 1f, Color.WHITE); // text shadow
@@ -397,7 +431,12 @@ public class DrawingFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.go_back) { // if pressed back button
             // goto file view fragment
-            navController.navigate(R.id.action_recordFragment_to_fileListFragment);
+            navController.navigate(R.id.action_drawingFragment_to_fileListFragment);
         }
+    }
+
+    @Override
+    public void onStop(){ // on leaving current fragment
+        super.onStop(); // if navigate to diff fragment
     }
 }

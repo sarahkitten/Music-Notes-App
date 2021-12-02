@@ -54,6 +54,8 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
 
     private File fileToPlay = null;
 
+    private Bundle bundle = null;
+
     //UI Elements
     private ImageButton playBtn;
     private View rootView;
@@ -147,7 +149,6 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
         }
 
         audioListAdapter = new AudioListAdapter(allFiles, this);
-
         FileList.setHasFixedSize(true);
         FileList.setLayoutManager(new LinearLayoutManager(getContext()));
         FileList.setAdapter(audioListAdapter);
@@ -237,7 +238,7 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
                 Bundle bundle = new Bundle();
                 bundle.putString("key",fileToPlay.getAbsolutePath()); // Put anything what you want
 
-                navController.navigate(R.id.action_fileListFragment_to_imageFragment, bundle);
+                navController.navigate(R.id.action_fileListFragment_to_drawingFragment, bundle);
                 Log.d("Im still in FILE LIST FRAGMENT", bundle.getString("key"));
 
             }
@@ -310,9 +311,10 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
         isPlaying = true;
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
-            public void onCompletion(MediaPlayer mp) {
-                stopAudio();
-                playerHeader.setText("Finished");
+            public void onCompletion(MediaPlayer mp) { // once audio is done playing
+                stopAudio(); // stop playback
+                playerHeader.setText("Finished"); // display that you are done
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED); // collapse media player
             }
         });
 
