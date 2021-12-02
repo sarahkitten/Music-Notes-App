@@ -44,10 +44,7 @@ public class PikassoView extends View {
     private Bitmap bitmap;  // where we save the pixels
     private Bitmap bitmapSaveState;  // save state to restore for drag and drop
     private Canvas bitmapCanvas;  // draws the bitmap
-    private Stack<Path> pathHistory = new Stack<Path>();
-    private Stack<Paint> lineHistory = new Stack<Paint>();
-    private Stack<Drawable> imgHistory = new Stack<Drawable>();
-    private Stack<Integer> isDraw = new Stack<Integer>();
+    private MusicItem imgCurr;
     private Paint paintScreen;
     private Paint paintLine;
     private Paint paintText;
@@ -58,6 +55,19 @@ public class PikassoView extends View {
     Drawable draggable_img;  // image to drag/drop
     private float drag_img_width;  // x dimension of draggable img
     private float drag_img_height;  // y dimension of draggable img
+
+    private Stack<Path> pathHistory = new Stack<Path>();
+    private Stack<Paint> lineHistory = new Stack<Paint>();
+    private Stack<Float> imgX = new Stack<Float>();
+    private Stack<Float> imgY = new Stack<Float>();
+    private Stack<Float> txtX = new Stack<>();
+    private Stack<Float> txtY = new Stack<Float>();
+    private Stack<MusicItem> imgHistory = new Stack<MusicItem>();
+    private Stack<Integer> isDraw = new Stack<Integer>();
+    private Stack<String> typedTextHistory = new Stack<String>();
+    private Stack<Paint> paintTextHistory = new Stack<Paint>();
+    private float xCoord;
+    private float yCoord;
 
     public String typedText = "text";  // the text to be dragged/dropped in typing mode
 
@@ -261,10 +271,19 @@ public class PikassoView extends View {
     }
 
     private void imgDragTouchEnded(int pointerId) {
-        // implement? might need something here for undo
-        Drawable drawable = draggable_img.mutate();
-        imgHistory.push(drawable);
-        isDraw.push(0);
+        if (inputMode.equals("type")) {
+            typedTextHistory.push(typedText);
+            paintTextHistory.push(paintText);
+            isDraw.push(2);
+            txtX.push(xCoord);
+            txtY.push(yCoord);
+        }
+        else {
+            imgHistory.push(imgCurr);
+            isDraw.push(0);
+            imgX.push(xCoord);
+            imgY.push(yCoord);
+        }
     }
 
     private void drawDraggable_img(float x, float y) {
@@ -279,6 +298,8 @@ public class PikassoView extends View {
         } else {  // drag text
             bitmapCanvas.drawText(typedText, x, y, paintText);
         }
+        xCoord = x;
+        yCoord = y;
 
     }
 
@@ -329,6 +350,7 @@ public class PikassoView extends View {
                 size_multiplier_y = 0.1f;
                 break;
         }
+        imgCurr = item; // keep track of current note type
         // set the width/height
         drag_img_width = draggable_img.getIntrinsicWidth() * size_multiplier_x;
         drag_img_height = draggable_img.getIntrinsicHeight() * size_multiplier_y;
@@ -360,7 +382,6 @@ public class PikassoView extends View {
         previousPointMap.clear();  // clear map of previous points
         pathHistory.clear(); // clear line and path history
         lineHistory.clear(); // clear image history
-        imgHistory.clear();
         isDraw.clear();
         bitmap.eraseColor(Color.WHITE);  // erase bitmap
         invalidate(); // refresh the screen
@@ -428,12 +449,22 @@ public class PikassoView extends View {
     public void undo() {
         if (isDraw.size() > 0)
         {
+            String lastInputMode = inputMode;
             int n = isDraw.pop();
             if (n == 1) {
                 pathHistory.pop(); // Remove the last path from the history
+                lineHistory.pop();
             }
-            else {
+            else if (n == 0){
                 imgHistory.pop();
+                imgX.pop();
+                imgY.pop();
+            }
+            else if (n == 2){
+                paintTextHistory.pop();
+                typedTextHistory.pop();
+                txtX.pop();
+                txtY.pop();
             }
 
             bitmap.eraseColor(Color.WHITE);
@@ -442,8 +473,19 @@ public class PikassoView extends View {
                 bitmapCanvas.drawPath(pathHistory.get(i), lineHistory.get(i));
             }
             for (int i = 0; i < imgHistory.size(); i++) {
-                imgHistory.get(i).draw(bitmapCanvas);  // draw image
+                inputMode = "drag";
+                setDraggable_img(imgHistory.get(i));
+                drawDraggable_img(imgX.get(i), imgY.get(i));
+                
             }
+            for (int i = 0; i < paintTextHistory.size(); i++) {
+                inputMode = "type";
+                paintText = paintTextHistory.get(i);
+                typedText = typedTextHistory.get(i);
+                drawDraggable_img(txtX.get(i), txtY.get(i));
+
+            }
+            inputMode = lastInputMode;
         }
     }
 }
