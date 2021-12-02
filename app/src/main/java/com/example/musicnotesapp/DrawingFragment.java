@@ -156,8 +156,20 @@ public class DrawingFragment extends Fragment implements OnClickListener {
                 showLineWidthDialog();
                 break;
 
-            case R.id.randomizeId:  // temporary: randomize note type for drag and drop
-                pikassoView.randomizeDraggable_img();
+            case R.id.quarterNote:
+                pikassoView.setDraggable_img(PikassoView.MusicItem.QUARTER_NOTE);
+                break;
+
+            case R.id.halfNote:
+                pikassoView.setDraggable_img(PikassoView.MusicItem.HALF_NOTE);
+                break;
+
+            case R.id.wholeNote:
+                pikassoView.setDraggable_img(PikassoView.MusicItem.WHOLE_NOTE);
+                break;
+
+            case R.id.staff:
+                pikassoView.setDraggable_img(PikassoView.MusicItem.STAFF);
                 break;
         }
 
