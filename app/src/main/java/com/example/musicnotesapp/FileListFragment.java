@@ -2,8 +2,10 @@ package com.example.musicnotesapp;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -250,6 +252,18 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
             }
         }
         else{ // delete given file
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext()); //make alert box
+            alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() { // make OKAY button
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) { // if clicked ok
+                    // goto file view fragment
+                    ;
+                }
+            });
+            alertDialog.setNegativeButton("CANCEL", null); // make cancel button
+            alertDialog.setTitle("Deleting File"); // title of alert box
+            alertDialog.setMessage("Are you sure, you want to delete this file?"); // if pressed okay
+            alertDialog.create().show(); // create and show the alert box
             fileToPlay.delete(); // maybe delete file
             allFiles.remove(position); // remove entry from list
             audioListAdapter = new AudioListAdapter(allFiles, this);
