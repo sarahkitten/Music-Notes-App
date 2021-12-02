@@ -57,7 +57,7 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
     //UI Elements
     private ImageButton playBtn;
     private View rootView;
-//    private ImageView imageView;
+    private ImageView imageView;
     private TextView playerHeader;
     private TextView playerFilename;
 
@@ -115,9 +115,9 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
         playerFilename = view.findViewById(R.id.player_filename);
 
         playerSeekbar = view.findViewById(R.id.player_seekbar);
-
         playerSheet = view.findViewById(R.id.player_sheet); // get audio player layout
         bottomSheetBehavior = BottomSheetBehavior.from(playerSheet); // get behavior of the player sheet
+
         navController = Navigation.findNavController(view); // set navController
 
         FileList = view.findViewById(R.id.file_list_view); // find file list display in layout
@@ -233,22 +233,13 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
                 }
             }
             else if (fileToPlay.getName().endsWith(".jpg")) {
-                try {
-                    Log.d("file: ", fileToPlay.getAbsolutePath());
-                    File f = new File(fileToPlay.getAbsolutePath());
-                    Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+                Log.d("file: ", fileToPlay.getAbsolutePath());
+                Bundle bundle = new Bundle();
+                bundle.putString("key",fileToPlay.getAbsolutePath()); // Put anything what you want
 
-//                LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
-//                View view = inflater.inflate(R.layout.image_picker,  null);
-////                 Code to retrieve image
-//                ImageView img = (ImageView) view.findViewById(R.id.imgPicker);
-//                imageView = view.findViewById(R.id.imgPicker);
-                    ImageView imageView = (ImageView) rootView.findViewById(R.id.imgPicker);
-                    imageView.setImageBitmap(b);
-//                navController.navigate(R.id.imgPicker);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                navController.navigate(R.id.action_fileListFragment_to_imageFragment, bundle);
+                Log.d("Im still in FILE LIST FRAGMENT", bundle.getString("key"));
+
             }
         }
         else{ // delete given file
