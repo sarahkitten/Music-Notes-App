@@ -256,21 +256,23 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
             alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() { // make OKAY button
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) { // if clicked ok
-                    // goto file view fragment
-                    ;
+                    delete_file(fileToPlay, position); // call delete function on file
                 }
             });
             alertDialog.setNegativeButton("CANCEL", null); // make cancel button
             alertDialog.setTitle("Deleting File"); // title of alert box
             alertDialog.setMessage("Are you sure, you want to delete this file?"); // if pressed okay
             alertDialog.create().show(); // create and show the alert box
-            fileToPlay.delete(); // maybe delete file
-            allFiles.remove(position); // remove entry from list
-            audioListAdapter = new AudioListAdapter(allFiles, this);
-            FileList.setHasFixedSize(true);
-            FileList.setLayoutManager(new LinearLayoutManager(getContext()));
-            FileList.setAdapter(audioListAdapter);
         }
+    }
+
+    private void delete_file(File file, int position){
+        fileToPlay.delete(); // maybe delete file
+        allFiles.remove(position); // remove entry from list
+        audioListAdapter = new AudioListAdapter(allFiles, this);
+        FileList.setHasFixedSize(true);
+        FileList.setLayoutManager(new LinearLayoutManager(getContext()));
+        FileList.setAdapter(audioListAdapter); // sets the new file list
     }
 
     private void pauseAudio() {
