@@ -68,13 +68,11 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
     private Runnable updateSeekbar;
 
     private NavController navController;
-//    private Button NoteBtn;
-//    private Button RecordBtn;
+
 
     private ConstraintLayout playerSheet; // get the audio player layout
     private BottomSheetBehavior bottomSheetBehavior; // get the bottom sheet class
     private RecyclerView FileList; // get the file displayer
-//    private RecyclerView noteFileList; // get the file displayer
     private List<File> allFiles = new ArrayList<>();
 
     private AudioListAdapter audioListAdapter; // for AudioListAdapter
@@ -95,16 +93,16 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_file_list, container, false);
-//        imageView = rootView.findViewById(R.id.imgPicker);
-
         return rootView;
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.i(TAG, "onCreateOptionsMenu: called");
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
+        //inflate file_list_menu.xml as the menu
         inflater.inflate(R.menu.file_list_menu, menu);
     }
 
@@ -112,9 +110,9 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        playBtn = view.findViewById(R.id.player_play_btn);
-        playerHeader = view.findViewById(R.id.player_header_title);
-        playerFilename = view.findViewById(R.id.player_filename);
+        playBtn = view.findViewById(R.id.player_play_btn);          //MediaPlayer button
+        playerHeader = view.findViewById(R.id.player_header_title); //MediaPlayer title
+        playerFilename = view.findViewById(R.id.player_filename);   //MediaPlayer file name
 
         playerSeekbar = view.findViewById(R.id.player_seekbar);
         playerSheet = view.findViewById(R.id.player_sheet); // get audio player layout
@@ -148,15 +146,17 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
             }
         }
 
-        audioListAdapter = new AudioListAdapter(allFiles, this);
-        FileList.setHasFixedSize(true);
-        FileList.setLayoutManager(new LinearLayoutManager(getContext()));
-        FileList.setAdapter(audioListAdapter);
+        audioListAdapter = new AudioListAdapter(allFiles, this); //set AudioListAdapter
+        FileList.setHasFixedSize(true); //set RecyclerView to a fixed size
+        FileList.setLayoutManager(new LinearLayoutManager(getContext())); //add layout manager to RecyclerView
+        FileList.setAdapter(audioListAdapter); //set the AudioListAdapter to the RecyclerView
 
 
+        //add media player
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                //if the state changed hidden collapse mediaplayer
                 if(newState == BottomSheetBehavior.STATE_HIDDEN){
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
@@ -168,6 +168,7 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
             }
         });
 
+        //onClick pause and play functionality for media player
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,6 +182,7 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
             }
         });
 
+
         playerSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -192,6 +194,7 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
                 pauseAudio();
             }
 
+            //media player position of audio functionality
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int progress = seekBar.getProgress();
@@ -206,12 +209,12 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.Record:  // invoke clear
+            case R.id.Record:  // Navigate to RecordFragment
                 Log.d(TAG, "onClick: Record button clicked");
                 navController.navigate(R.id.action_fileListFragment_to_recordFragment);
                 break;
 
-            case R.id.Note:  // invoke save
+            case R.id.Note:  // Navigate to DrawingFragment
                 Log.d(TAG, "onClick: Note button clicked");
                 navController.navigate(R.id.action_fileListFragment_to_drawingFragment);
                 break;
@@ -225,20 +228,24 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
         fileToPlay = file;
         if(!delete_flag)
         {
+            //if the file is an audio file
             if (fileToPlay.getName().endsWith(".3gp")) {
+                //if another file is already playing stop, and start new file
                 if (isPlaying) {
                     stopAudio();
                     playAudio(fileToPlay);
                 } else {
+                //play the file
                     playAudio(fileToPlay);
                 }
             }
+            //if the file is a jpg file
             else if (fileToPlay.getName().endsWith(".jpg")) {
                 Log.d("file: ", fileToPlay.getAbsolutePath());
-                Bundle bundle = new Bundle();
-                bundle.putString("key",fileToPlay.getAbsolutePath()); // Put anything what you want
+                Bundle bundle = new Bundle(); //bundle to send file path from FileListFragment to DrawingFragment
+                bundle.putString("key",fileToPlay.getAbsolutePath()); // populate bundle
 
-                navController.navigate(R.id.action_fileListFragment_to_drawingFragment, bundle);
+                navController.navigate(R.id.action_fileListFragment_to_drawingFragment, bundle); //navigate using navgraph
                 Log.d("Im still in FILE LIST FRAGMENT", bundle.getString("key"));
 
             }
@@ -261,52 +268,56 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
     private void delete_file(File file, int position){
         fileToPlay.delete(); // maybe delete file
         allFiles.remove(position); // remove entry from list
-        audioListAdapter = new AudioListAdapter(allFiles, this);
+        audioListAdapter = new AudioListAdapter(allFiles, this); //Instantiate new AudioListAdapter
         FileList.setHasFixedSize(true);
         FileList.setLayoutManager(new LinearLayoutManager(getContext()));
         FileList.setAdapter(audioListAdapter); // sets the new file list
     }
 
     private void pauseAudio() {
-        mediaPlayer.pause();
+        mediaPlayer.pause();  //pause the media player audio
+        //change playBtn to play
         playBtn.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.player_play_btn, null));
-        isPlaying = false;
-        seekbarHandler.removeCallbacks(updateSeekbar);
+        isPlaying = false; //change isPlaying global variable
+        seekbarHandler.removeCallbacks(updateSeekbar); //Stop seek bar
     }
 
     private void resumeAudio() {
-        mediaPlayer.start();
+        mediaPlayer.start();    //play the media player audio
+        //change playBtn to pause
         playBtn.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.player_pause_btn, null));
-        isPlaying = true;
-
-        updateRunnable();
-        seekbarHandler.postDelayed(updateSeekbar, 0);
-
+        isPlaying = true; //change isPlaying global variable
+        updateRunnable(); //play from the seekbar position
+        seekbarHandler.postDelayed(updateSeekbar, 0); //updateSeekbar
     }
 
     private void stopAudio() {
         //Stop The Audio
+        //change playBtn to play
         playBtn.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.player_play_btn, null));
-        playerHeader.setText("Stopped");
-        isPlaying = false;
-        mediaPlayer.stop();
-        seekbarHandler.removeCallbacks(updateSeekbar);
+        playerHeader.setText("Stopped"); //set title
+        isPlaying = false; //change isPlaying global variable
+        mediaPlayer.stop(); //stop the media player audio
+        seekbarHandler.removeCallbacks(updateSeekbar);  //Stop seek bar
     }
 
     private void playAudio(File fileToPlay) {
-
+        //new media player
         mediaPlayer = new MediaPlayer();
+        //bring up the media player
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         try {
+            //update media player data
             mediaPlayer.setDataSource(fileToPlay.getAbsolutePath());
             mediaPlayer.prepare();
             mediaPlayer.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //change playBtn to pause
         playBtn.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.player_pause_btn, null));
-        playerFilename.setText(fileToPlay.getName());
-        playerHeader.setText("Playing");
+        playerFilename.setText(fileToPlay.getName()); //set global filename
+        playerHeader.setText("Playing"); //set global title
         //Play the audio
         isPlaying = true;
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -318,18 +329,20 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
             }
         });
 
-        playerSeekbar.setMax(mediaPlayer.getDuration());
+        playerSeekbar.setMax(mediaPlayer.getDuration());    //set seekBar max
 
-        seekbarHandler = new Handler();
-        updateRunnable();
-        seekbarHandler.postDelayed(updateSeekbar, 0);
+        seekbarHandler = new Handler(); //make handler for seekBar
+        updateRunnable(); //play from the seekbar position
+        seekbarHandler.postDelayed(updateSeekbar, 0); //updateSeekbar
 
     }
 
     private void updateRunnable() {
+        //update seekbar
         updateSeekbar = new Runnable() {
             @Override
             public void run() {
+                //using current global variable mediaPlayer value
                 playerSeekbar.setProgress(mediaPlayer.getCurrentPosition());
                 seekbarHandler.postDelayed(this, 500);
             }
@@ -338,6 +351,7 @@ public class FileListFragment extends Fragment implements AudioListAdapter.onIte
 
     @Override
     public void onStop() {
+        //stop audio if global variable isPlaying
         super.onStop();
         if(isPlaying) {
             stopAudio();
