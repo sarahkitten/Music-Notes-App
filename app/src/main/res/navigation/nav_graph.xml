@@ -22,14 +22,6 @@
         <action
             android:id="@+id/action_fileListFragment_to_recordFragment"
             app:destination="@id/recordFragment" />
-        <action
-            android:id="@+id/action_fileListFragment_to_imageFragment"
-            app:destination="@id/imageFragment">
-            <argument
-                app:argType="string"
-                android:name="myArg"
-                android:defaultValue="NOTHING YET"/>
-        </action>
 
     </fragment>
     <fragment
@@ -48,15 +40,6 @@
         tools:layout="@layout/fragment_record" >
         <action
             android:id="@+id/action_recordFragment_to_fileListFragment"
-            app:destination="@id/fileListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/imageFragment"
-        android:name="com.example.musicnotesapp.ImageFragment"
-        android:label="image_picker"
-        tools:layout="@layout/image_picker" >
-        <action
-            android:id="@+id/action_imageFragment_to_fileListFragment"
             app:destination="@id/fileListFragment" />
     </fragment>
 </navigation>
