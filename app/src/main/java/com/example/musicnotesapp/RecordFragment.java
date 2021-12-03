@@ -1,3 +1,12 @@
+/*
+Source Code for the initialization used in the Audio Recording, CIS422 FA21
+Author(s): Alex Summers
+Last Edited: 12/2/21
+Sources:
+    Base version of the code:
+    https://www.youtube.com/watch?v=z--VaNj6l1U&ab_channel=TVACStudio
+*/
+
 package com.example.musicnotesapp;
 
 
