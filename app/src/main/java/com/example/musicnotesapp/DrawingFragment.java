@@ -31,12 +31,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,6 +74,13 @@ public class DrawingFragment extends Fragment implements OnClickListener {
     private NavController navController; // have nav controller so we navigate through fragments
 
     private com.google.android.material.bottomnavigation.BottomNavigationView bottomNavigationView;
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private TextView mTextViewState;
+
+    private ImageButton quarterNote;
+    private ImageButton halfNote;
+    private ImageButton wholeNote;
+    private ImageButton staff;
 
 
     public DrawingFragment() {
@@ -105,6 +114,38 @@ public class DrawingFragment extends Fragment implements OnClickListener {
         navController = Navigation.findNavController(view); // set navController
         pikassoView = view.findViewById(R.id.view);  // set pikassoView
 
+        quarterNote = view.findViewById(R.id.quarterNote);
+        halfNote = view.findViewById(R.id.halfNote);
+        wholeNote = view.findViewById(R.id.wholeNote);
+        staff = view.findViewById(R.id.staff);
+
+        quarterNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pikassoView.setDraggable_img(PikassoView.MusicItem.QUARTER_NOTE);
+            }
+        });
+
+        halfNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pikassoView.setDraggable_img(PikassoView.MusicItem.HALF_NOTE);
+            }
+        });
+
+        wholeNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pikassoView.setDraggable_img(PikassoView.MusicItem.WHOLE_NOTE);
+            }
+        });
+        staff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pikassoView.setDraggable_img(PikassoView.MusicItem.STAFF);
+            }
+        });
+
         if(bundle != null){
             // handle your code here.
             // Log.d("I HAVE A BUNDLE", bundle.getString("key"));
@@ -117,8 +158,10 @@ public class DrawingFragment extends Fragment implements OnClickListener {
         }
 
         bottomNavigationView = view.findViewById(R.id.bottom_navigation);
-
         bottomNavigationView.setOnItemSelectedListener(listener);
+
+        View bottomSheet = view.findViewById(R.id.bottom_nested_view);
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
     }
 
     private BottomNavigationView.OnItemSelectedListener listener =
@@ -129,17 +172,25 @@ public class DrawingFragment extends Fragment implements OnClickListener {
                         case R.id.drawingMode:
                             Log.i(TAG, "drawingMode: called");
                             pikassoView.inputMode = "draw";
+
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
                             break;
 
                         case R.id.draggingMode:
                             Log.i(TAG, "draggingMode: called");
                             pikassoView.inputMode = "drag";
-                            break;
 
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                            break;
 
                         case R.id.textId:
                             Log.i(TAG, "textID: called");
                             pikassoView.inputMode = "type";
+
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
                             showTextDialog();
                             break;
                     }
@@ -183,21 +234,6 @@ public class DrawingFragment extends Fragment implements OnClickListener {
                 showLineWidthDialog();
                 break;
 
-            case R.id.quarterNote:
-                pikassoView.setDraggable_img(PikassoView.MusicItem.QUARTER_NOTE);
-                break;
-
-            case R.id.halfNote:
-                pikassoView.setDraggable_img(PikassoView.MusicItem.HALF_NOTE);
-                break;
-
-            case R.id.wholeNote:
-                pikassoView.setDraggable_img(PikassoView.MusicItem.WHOLE_NOTE);
-                break;
-
-            case R.id.staff:
-                pikassoView.setDraggable_img(PikassoView.MusicItem.STAFF);
-                break;
         }
 
         return super.onOptionsItemSelected(item);
