@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/list_pause_btn" />
+        app:srcCompat="@drawable/list_edit_btn" />
 
     <TextView
         android:id="@+id/list_title"
