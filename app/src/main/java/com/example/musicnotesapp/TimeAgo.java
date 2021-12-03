@@ -1,5 +1,5 @@
 /*
-Source Code for the initialization used in the Audio Recording, CIS422 FA21
+Source Code for the initialization used in the FileListFragment, CIS422 FA21
 Author(s): Kale Satta-Hutton
 Last Edited: 12/2/21
 Sources:

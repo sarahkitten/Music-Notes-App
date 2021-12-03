@@ -1,9 +1,13 @@
+<!--
+
+-->
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/fileListFragment">
+    <!--Make the file list fragment the home page-->
 
     <fragment
         android:id="@+id/fileListFragment"
@@ -11,6 +15,9 @@
         android:label="fragment_file_list"
         tools:layout="@layout/fragment_file_list" >
 
+        <!--go from file list fragment to drawing fragment
+        also give it an argument of string so it can pull
+        up a file name of what the user wants to edit-->
         <action
             android:id="@+id/action_fileListFragment_to_drawingFragment"
             app:destination="@id/drawingFragment">
@@ -19,6 +26,7 @@
                 android:name="myArg"
                 android:defaultValue="NOTHING YET"/>
         </action>
+        <!--go from file list fragment to record fragment-->
         <action
             android:id="@+id/action_fileListFragment_to_recordFragment"
             app:destination="@id/recordFragment" />
@@ -29,6 +37,7 @@
         android:name="com.example.musicnotesapp.DrawingFragment"
         android:label="fragment_drawing"
         tools:layout="@layout/fragment_drawing" >
+        <!--go from file drawing fragment to file list fragment-->
         <action
             android:id="@+id/action_drawingFragment_to_fileListFragment"
             app:destination="@id/fileListFragment" />
@@ -38,6 +47,7 @@
         android:name="com.example.musicnotesapp.RecordFragment"
         android:label="fragment_record"
         tools:layout="@layout/fragment_record" >
+        <!--go from file record fragment to file list fragment-->
         <action
             android:id="@+id/action_recordFragment_to_fileListFragment"
             app:destination="@id/fileListFragment" />

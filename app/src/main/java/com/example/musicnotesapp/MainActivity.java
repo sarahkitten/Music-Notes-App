@@ -1,5 +1,5 @@
 /*
-Source Code for the initialization used in the Audio Recording, CIS422 FA21
+Source Code for the initialization, CIS422 FA21
 Author(s): Alex Summers
 Last Edited: 12/2/21
 Sources: N/A
