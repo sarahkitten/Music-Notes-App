@@ -49,7 +49,6 @@ public class ImageFragment extends Fragment implements View.OnClickListener {
 
         if(bundle != null){
             // handle your code here.
-            Log.d("I HAVE A BUNDLE", bundle.getString("key"));
 
             try {
                 fileToPlay = bundle.getString("key");

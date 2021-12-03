@@ -10,9 +10,15 @@
         android:name="com.example.musicnotesapp.FileListFragment"
         android:label="fragment_file_list"
         tools:layout="@layout/fragment_file_list" >
+
         <action
             android:id="@+id/action_fileListFragment_to_drawingFragment"
-            app:destination="@id/drawingFragment" />
+            app:destination="@id/drawingFragment">
+            <argument
+                app:argType="string"
+                android:name="myArg"
+                android:defaultValue="NOTHING YET"/>
+        </action>
         <action
             android:id="@+id/action_fileListFragment_to_recordFragment"
             app:destination="@id/recordFragment" />
