@@ -73,14 +73,13 @@ public class DrawingFragment extends Fragment implements OnClickListener {
 
     private NavController navController; // have nav controller so we navigate through fragments
 
-    private com.google.android.material.bottomnavigation.BottomNavigationView bottomNavigationView;
-    private BottomSheetBehavior mBottomSheetBehavior;
-    private TextView mTextViewState;
+    private BottomNavigationView bottomNavigationView; // Bottom mode selection
+    private BottomSheetBehavior mBottomSheetBehavior; // Note selection menu behavior
 
-    private ImageButton quarterNote;
-    private ImageButton halfNote;
-    private ImageButton wholeNote;
-    private ImageButton staff;
+    private ImageButton quarterNote; // Quarter Note button
+    private ImageButton halfNote; // Half Note button
+    private ImageButton wholeNote; // Whole Note button
+    private ImageButton staff; // Staff button
 
 
     public DrawingFragment() {
@@ -114,34 +113,34 @@ public class DrawingFragment extends Fragment implements OnClickListener {
         navController = Navigation.findNavController(view); // set navController
         pikassoView = view.findViewById(R.id.view);  // set pikassoView
 
-        quarterNote = view.findViewById(R.id.quarterNote);
+        quarterNote = view.findViewById(R.id.quarterNote); // Instantiate note buttons
         halfNote = view.findViewById(R.id.halfNote);
         wholeNote = view.findViewById(R.id.wholeNote);
         staff = view.findViewById(R.id.staff);
 
-        quarterNote.setOnClickListener(new View.OnClickListener() {
+        quarterNote.setOnClickListener(new View.OnClickListener() { // Call if quarter note button is pressed
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // Set note as quarter note
                 pikassoView.setDraggable_img(PikassoView.MusicItem.QUARTER_NOTE);
             }
         });
 
-        halfNote.setOnClickListener(new View.OnClickListener() {
+        halfNote.setOnClickListener(new View.OnClickListener() { // Call if half note button is pressed
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // Set note as half note
                 pikassoView.setDraggable_img(PikassoView.MusicItem.HALF_NOTE);
             }
         });
 
-        wholeNote.setOnClickListener(new View.OnClickListener() {
+        wholeNote.setOnClickListener(new View.OnClickListener() { // Call if whole note button is pressed
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // Set note as whole note
                 pikassoView.setDraggable_img(PikassoView.MusicItem.WHOLE_NOTE);
             }
         });
-        staff.setOnClickListener(new View.OnClickListener() {
+        staff.setOnClickListener(new View.OnClickListener() { // Call if staff button is pressed
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // Set note as staff
                 pikassoView.setDraggable_img(PikassoView.MusicItem.STAFF);
             }
         });
@@ -157,41 +156,38 @@ public class DrawingFragment extends Fragment implements OnClickListener {
             }
         }
 
+        // Instantiate bottom mode selection menu and set listener on mode selected
         bottomNavigationView = view.findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(listener);
 
+        // Instantiate note selection menu and behavior from note selection view
         View bottomSheet = view.findViewById(R.id.bottom_nested_view);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
     }
 
     private BottomNavigationView.OnItemSelectedListener listener =
-            new com.google.android.material.bottomnavigation.BottomNavigationView.OnItemSelectedListener() {
+            new BottomNavigationView.OnItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    // Call if item is selected from mode selection menu
                     switch (item.getItemId()) {
-                        case R.id.drawingMode:
-                            Log.i(TAG, "drawingMode: called");
+                        case R.id.drawingMode: // Switch to drawing mode
                             pikassoView.inputMode = "draw";
-
+                            // Hide note selection menu
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
                             break;
 
-                        case R.id.draggingMode:
-                            Log.i(TAG, "draggingMode: called");
+                        case R.id.draggingMode: // Switch to dragging mode
                             pikassoView.inputMode = "drag";
-
+                            // Show note selection menu
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
                             break;
 
-                        case R.id.textId:
-                            Log.i(TAG, "textID: called");
+                        case R.id.textId: // Switch to text mode
                             pikassoView.inputMode = "type";
 
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-                            showTextDialog();
+                            showTextDialog(); // Bring up text edit window
                             break;
                     }
                     return true;

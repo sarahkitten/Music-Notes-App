@@ -63,17 +63,17 @@ public class PikassoView extends View {
     private Drawable loadedImg; // image loaded from save
     private Bitmap bitmapLoaded; // image loaded from save
 
-    private Stack<Path> pathHistory = new Stack<Path>();
-    private Stack<Paint> lineHistory = new Stack<Paint>();
-    private Stack<Float> imgX = new Stack<Float>();
-    private Stack<Float> imgY = new Stack<Float>();
-    private Stack<Float> txtX = new Stack<>();
-    private Stack<Float> txtY = new Stack<Float>();
-    private Stack<MusicItem> imgHistory = new Stack<MusicItem>();
-    private Stack<Integer> isDraw = new Stack<Integer>();
-    private Stack<String> typedTextHistory = new Stack<String>();
-    private Stack<Integer> textSizeHistory = new Stack<Integer>();
-    private Stack<Paint> paintTextHistory = new Stack<Paint>();
+    private Stack<Path> pathHistory = new Stack<Path>(); // history of drawn paths
+    private Stack<Paint> lineHistory = new Stack<Paint>(); // history of each path attr
+    private Stack<Float> imgX = new Stack<Float>(); // history of each img x position
+    private Stack<Float> imgY = new Stack<Float>(); // history of each img y position
+    private Stack<Float> txtX = new Stack<>(); // history of each text x position
+    private Stack<Float> txtY = new Stack<Float>(); // history of each text y position
+    private Stack<MusicItem> imgHistory = new Stack<MusicItem>(); // history of note types
+    private Stack<Integer> drawingMode = new Stack<Integer>(); // history of modes
+    private Stack<String> typedTextHistory = new Stack<String>(); // history of texts
+    private Stack<Integer> textSizeHistory = new Stack<Integer>(); // history of each text size
+    private Stack<Paint> paintTextHistory = new Stack<Paint>(); // history of each text attr
     private float xCoord;
     private float yCoord;
 
@@ -306,9 +306,9 @@ public class PikassoView extends View {
 
     private void drawingTouchEnded(int pointerId) {
         Path path = pathMap.get(pointerId);  // get the corresponding path
-        pathHistory.push(new Path(path));
+        pathHistory.push(new Path(path)); // push line and attr to history
         lineHistory.push(new Paint(paintLine));
-        isDraw.push(1);
+        drawingMode.push(1);
         bitmapCanvas.drawPath(path, paintLine);  // draw to bitmapCanvas
         path.reset();  // reset path
     }
@@ -345,18 +345,18 @@ public class PikassoView extends View {
         addImgToHistory();
     }
 
-    private void addImgToHistory() {
-        if (inputMode.equals("type")) {
+    private void addImgToHistory() { // Add image (text or image) and attributes to history
+        if (inputMode.equals("type")) { // add text
             typedTextHistory.push(typedText);
             paintTextHistory.push(paintText);
             textSizeHistory.push(getTextSize());
-            isDraw.push(2);
+            drawingMode.push(2);
             txtX.push(xCoord);
             txtY.push(yCoord);
         }
-        else {
+        else { // add image
             imgHistory.push(imgCurr);
-            isDraw.push(0);
+            drawingMode.push(0);
             imgX.push(xCoord);
             imgY.push(yCoord);
         }
@@ -448,12 +448,12 @@ public class PikassoView extends View {
         }
     }
 
-    public void clear() {
+    public void clear() { // clears bitmap of all paths/images and resets history
         pathMap.clear();  // removes all of the paths
         previousPointMap.clear();  // clear map of previous points
         pathHistory.clear(); // clear line and path history
         lineHistory.clear(); // clear image history
-        isDraw.clear();
+        drawingMode.clear();
         imgX.clear();
         imgY.clear();
         imgHistory.clear();
@@ -536,28 +536,28 @@ public class PikassoView extends View {
         }
     }
 
-    public void undo() {
+    public void undo() { // undoes last added line/image/text
         Log.i(TAG, "undo: called");
-        if (isDraw.size() > 0)
+        if (drawingMode.size() > 0) // checks if anything is drawn
         {
-            int n = isDraw.pop();
-            if (n == 1) {
-                pathHistory.pop(); // Remove the last path from the history
+            int n = drawingMode.pop();
+            if (n == 1) { // if last element is in drawing mode
+                pathHistory.pop(); // Remove the last path from the history and attrs
                 lineHistory.pop();
             }
-            else if (n == 0){
-                imgHistory.pop();
+            else if (n == 0){ // if last element is in dragging mode
+                imgHistory.pop(); // Remove the last img from the history and attrs
                 imgX.pop();
                 imgY.pop();
             }
-            else if (n == 2){
-                paintTextHistory.pop();
+            else if (n == 2){ // if last element is in text mode
+                paintTextHistory.pop(); // Remove the last text from the history and attrs
                 typedTextHistory.pop();
                 textSizeHistory.pop();
                 txtX.pop();
                 txtY.pop();
             }
         }
-        drawCanvas();
+        drawCanvas(); // Redraw canvas
     }
 }
