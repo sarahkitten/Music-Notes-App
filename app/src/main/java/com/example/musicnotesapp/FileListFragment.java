@@ -1,3 +1,12 @@
+/*
+Source Code for the FileListFragment, CIS422 FA21
+Author(s): Kale Satta-Hutton, Alex Summers
+Last Edited: 12/2/21
+Sources:
+    Base version of the code:
+    https://www.youtube.com/watch?v=z--VaNj6l1U&ab_channel=TVACStudio
+*/
+
 package com.example.musicnotesapp;
 
 import static android.content.ContentValues.TAG;
@@ -49,29 +58,28 @@ import java.util.List;
 public class FileListFragment extends Fragment implements AudioListAdapter.onItemListClick {
 
 
-    private MediaPlayer mediaPlayer = null;
-    private boolean isPlaying = false;
-
-    private File fileToPlay = null;
-
-    private Bundle bundle = null;
 
     //UI Elements
     private ImageButton playBtn;
     private View rootView;
-    private ImageView imageView;
     private TextView playerHeader;
     private TextView playerFilename;
 
+    //media player elements
     private SeekBar playerSeekbar;
     private Handler seekbarHandler;
     private Runnable updateSeekbar;
+    private MediaPlayer mediaPlayer = null;
+    private boolean isPlaying = false;
+    private File fileToPlay = null;
+    private ConstraintLayout playerSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
 
+    //navigation
     private NavController navController;
 
 
-    private ConstraintLayout playerSheet; // get the audio player layout
-    private BottomSheetBehavior bottomSheetBehavior; // get the bottom sheet class
+    //file display
     private RecyclerView FileList; // get the file displayer
     private List<File> allFiles = new ArrayList<>();
 
