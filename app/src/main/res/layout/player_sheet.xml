@@ -86,30 +86,6 @@
         app:layout_constraintTop_toBottomOf="@+id/player_filename"
         app:srcCompat="@drawable/player_play_btn" />
 
-    <ImageButton
-        android:id="@+id/imageView3"
-        android:background="@color/colorPrimary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/player_play_btn"
-        app:layout_constraintEnd_toStartOf="@+id/player_play_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/player_play_btn"
-        app:srcCompat="@drawable/player_back_btn" />
-
-    <ImageButton
-        android:id="@+id/imageView4"
-        android:background="@color/colorPrimary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/player_play_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/player_play_btn"
-        app:layout_constraintTop_toTopOf="@+id/player_play_btn"
-        app:srcCompat="@drawable/player_forward_btn" />
-
     <SeekBar
         android:id="@+id/player_seekbar"
         android:layout_width="0dp"
