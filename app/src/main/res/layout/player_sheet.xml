@@ -12,6 +12,7 @@
     android:id="@+id/player_sheet"
     >
 
+    <! -- Player sheet xml-->
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
